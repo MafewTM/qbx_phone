@@ -34,12 +34,12 @@ local function escape_str(s)
     return s
 end
 
-local function GenerateTweetId()
+local function generateTweetId()
     local tweetId = "TWEET-" .. math.random(11111111, 99999999)
     return tweetId
 end
 
-local function IsNumberInContacts(num)
+local function isNumberInContacts(num)
     local retval = num
     for _, v in pairs(PhoneData.Contacts) do
         if num == v.number then
@@ -49,7 +49,7 @@ local function IsNumberInContacts(num)
     return retval
 end
 
-local function CalculateTimeToDisplay()
+local function calculateTimeToDisplay()
     local hour = GetClockHours()
     local minute = GetClockMinutes()
 
@@ -65,7 +65,7 @@ local function CalculateTimeToDisplay()
     return obj
 end
 
-local function GetKeyByDate(Number, Date)
+local function getKeyByDate(Number, Date)
     local retval = nil
     if PhoneData.Chats[Number] ~= nil then
         if PhoneData.Chats[Number].messages ~= nil then
@@ -80,7 +80,7 @@ local function GetKeyByDate(Number, Date)
     return retval
 end
 
-local function GetKeyByNumber(Number)
+local function getKeyByNumber(Number)
     local retval = nil
     if PhoneData.Chats then
         for k, v in pairs(PhoneData.Chats) do
@@ -92,7 +92,7 @@ local function GetKeyByNumber(Number)
     return retval
 end
 
-local function ReorganizeChats(key)
+local function reorganizeChats(key)
     local ReorganizedChats = {}
     ReorganizedChats[1] = PhoneData.Chats[key]
     for k, chat in pairs(PhoneData.Chats) do
@@ -117,7 +117,7 @@ local function findVehFromPlateAndLocate(plate)
     end
 end
 
-local function DisableDisplayControlActions()
+local function disableDisplayControlActions()
     DisableControlAction(0, 1, true) -- disable mouse look
     DisableControlAction(0, 2, true) -- disable mouse look
     DisableControlAction(0, 3, true) -- disable mouse look
@@ -138,7 +138,7 @@ local function DisableDisplayControlActions()
     DisableControlAction(0, 245, true) -- disable chat
 end
 
-local function LoadPhone()
+local function loadPhone()
     Wait(100)
 
     local pData = lib.callback.await('qb-phone:server:GetPhoneData', false)
@@ -189,7 +189,7 @@ local function LoadPhone()
         local Chats = {}
         for _, v in pairs(pData.Chats) do
             Chats[v.number] = {
-                name = IsNumberInContacts(v.number),
+                name = isNumberInContacts(v.number),
                 number = v.number,
                 messages = json.decode(v.messages)
             }
@@ -200,7 +200,7 @@ local function LoadPhone()
 
     if pData.Invoices ~= nil and next(pData.Invoices) ~= nil then
         for _, invoice in pairs(pData.Invoices) do
-            invoice.name = IsNumberInContacts(invoice.number)
+            invoice.name = isNumberInContacts(invoice.number)
         end
         PhoneData.Invoices = pData.Invoices
     end
@@ -229,7 +229,7 @@ local function LoadPhone()
     end
 
     SendNUIMessage({
-        action = "LoadPhoneData",
+        action = "loadPhoneData",
         PhoneData = PhoneData,
         PlayerData = PhoneData.PlayerData,
         PlayerJob = PhoneData.PlayerData.job,
@@ -238,7 +238,7 @@ local function LoadPhone()
     })
 end
 
-local function OpenPhone()
+local function openPhone()
     local HasPhone = lib.callback.await('qb-phone:server:GetPhoneData', false)
     if HasPhone then
         PhoneData.PlayerData = QBX.PlayerData
@@ -254,7 +254,7 @@ local function OpenPhone()
 
         CreateThread(function()
             while PhoneData.isOpen do
-                DisableDisplayControlActions()
+                disableDisplayControlActions()
                 Wait(1)
             end
         end)
@@ -276,13 +276,13 @@ local function OpenPhone()
     end
 end
 
-local function GenerateCallId(caller, target)
+local function generateCallId(caller, target)
     local CallId = math.ceil(((tonumber(caller) + tonumber(target)) / 100 * 1))
     return CallId
 end
 
-local function CancelCall()
-    TriggerServerEvent('qb-phone:server:CancelCall', PhoneData.CallData)
+local function cancelCall()
+    TriggerServerEvent('qb-phone:server:cancelCall', PhoneData.CallData)
     if PhoneData.CallData.CallType == "ongoing" then
         exports['pma-voice']:removePlayerFromCall(PhoneData.CallData.CallId)
     end
@@ -336,15 +336,15 @@ local function CancelCall()
     end
 end
 
-local function CallContact(CallData, AnonymousCall)
+local function callContact(CallData, AnonymousCall)
     local RepeatCount = 0
     PhoneData.CallData.CallType = "outgoing"
     PhoneData.CallData.InCall = true
     PhoneData.CallData.TargetData = CallData
     PhoneData.CallData.AnsweredCall = false
-    PhoneData.CallData.CallId = GenerateCallId(PhoneData.PlayerData.charinfo.phone, CallData.number)
+    PhoneData.CallData.CallId = generateCallId(PhoneData.PlayerData.charinfo.phone, CallData.number)
 
-    TriggerServerEvent('qb-phone:server:CallContact', PhoneData.CallData.TargetData, PhoneData.CallData.CallId,
+    TriggerServerEvent('qb-phone:server:callContact', PhoneData.CallData.TargetData, PhoneData.CallData.CallId,
         AnonymousCall)
     TriggerServerEvent('qb-phone:server:SetCallState', true)
 
@@ -359,7 +359,7 @@ local function CallContact(CallData, AnonymousCall)
                 end
                 Wait(Config.RepeatTimeout)
             else
-                CancelCall()
+                cancelCall()
                 break
             end
         else
@@ -368,14 +368,14 @@ local function CallContact(CallData, AnonymousCall)
     end
 end
 
-local function AnswerCall()
+local function answerCall()
     if (PhoneData.CallData.CallType == "incoming" or PhoneData.CallData.CallType == "outgoing") and
         PhoneData.CallData.InCall and not PhoneData.CallData.AnsweredCall then
         PhoneData.CallData.CallType = "ongoing"
         PhoneData.CallData.AnsweredCall = true
         PhoneData.CallData.CallTime = 0
 
-        SendNUIMessage({ action = "AnswerCall", CallData = PhoneData.CallData })
+        SendNUIMessage({ action = "answerCall", CallData = PhoneData.CallData })
         SendNUIMessage({ action = "SetupHomeCall", CallData = PhoneData.CallData })
 
         TriggerServerEvent('qb-phone:server:SetCallState', true)
@@ -403,7 +403,7 @@ local function AnswerCall()
             end
         end)
 
-        TriggerServerEvent('qb-phone:server:AnswerCall', PhoneData.CallData)
+        TriggerServerEvent('qb-phone:server:answerCall', PhoneData.CallData)
         exports['pma-voice']:addPlayerToCall(PhoneData.CallData.CallId)
     else
         PhoneData.CallData.InCall = false
@@ -422,7 +422,7 @@ local function AnswerCall()
     end
 end
 
-local function CellFrontCamActivate(activate)
+local function cellFrontCamActivate(activate)
     return Citizen.InvokeNative(0x2491A93618B7D838, activate)
 end
 
@@ -433,7 +433,7 @@ RegisterCommand('phone', function()
     if not PhoneData.isOpen and LocalPlayer.state.isLoggedIn then
         if not PlayerData.metadata['ishandcuffed'] and not PlayerData.metadata['inlaststand'] and
             not PlayerData.metadata['isdead'] and not IsPauseMenuActive() then
-            OpenPhone()
+            openPhone()
         else
             exports.qbx_core:Notify("Action not available at the moment..", "error")
         end
@@ -445,22 +445,22 @@ RegisterKeyMapping('phone', 'Open Phone', 'keyboard', 'M')
 -- NUI Callbacks
 
 RegisterNUICallback('CancelOutgoingCall', function(_, cb)
-    CancelCall()
+    cancelCall()
     cb('ok')
 end)
 
 RegisterNUICallback('DenyIncomingCall', function(_, cb)
-    CancelCall()
+    cancelCall()
     cb('ok')
 end)
 
 RegisterNUICallback('CancelOngoingCall', function(_, cb)
-    CancelCall()
+    cancelCall()
     cb('ok')
 end)
 
-RegisterNUICallback('AnswerCall', function(_, cb)
-    AnswerCall()
+RegisterNUICallback('answerCall', function(_, cb)
+    answerCall()
     cb('ok')
 end)
 
@@ -611,7 +611,7 @@ end)
 
 RegisterNUICallback('ClearAlerts', function(data, cb)
     local chat = data.number
-    local ChatKey = GetKeyByNumber(chat)
+    local ChatKey = getKeyByNumber(chat)
 
     if PhoneData.Chats[ChatKey].Unread ~= nil then
         local newAlerts = (Config.PhoneApplications['whatsapp'].Alerts - PhoneData.Chats[ChatKey].Unread)
@@ -702,7 +702,7 @@ RegisterNUICallback('PostNewTweet', function(data, cb)
         citizenid = PhoneData.PlayerData.citizenid,
         message = escape_str(data.Message),
         time = data.Date,
-        tweetId = GenerateTweetId(),
+        tweetId = generateTweetId(),
         picture = data.Picture,
         url = data.url
     }
@@ -780,7 +780,7 @@ RegisterNUICallback('FetchSearchResults', function(data, cb)
     cb(result)
 end)
 
-local function GetFirstAvailableSlot() -- Placeholder
+local function getFirstAvailableSlot() -- Placeholder
     return nil
 end
 
@@ -788,7 +788,7 @@ local CanDownloadApps = false
 
 RegisterNUICallback('InstallApplication', function(data, cb)
     local ApplicationData = Config.StoreApps[data.app]
-    local NewSlot = GetFirstAvailableSlot()
+    local NewSlot = getFirstAvailableSlot()
 
     if not CanDownloadApps then
         return
@@ -1177,7 +1177,7 @@ RegisterNUICallback('GetWhatsappChats', function(_, cb)
     cb(Chats)
 end)
 
-RegisterNUICallback('CallContact', function(data, cb)
+RegisterNUICallback('callContact', function(data, cb)
     local CanCall, IsOnline = lib.callback.await('qb-phone:server:GetCallState', false, data.ContactData)
     local status = {
         CanCall = CanCall,
@@ -1186,7 +1186,7 @@ RegisterNUICallback('CallContact', function(data, cb)
     }
     cb(status)
     if CanCall and not status.InCall and (data.ContactData.number ~= PhoneData.PlayerData.charinfo.phone) then
-        CallContact(data.ContactData, data.Anonymous)
+        callContact(data.ContactData, data.Anonymous)
     end
 end)
 
@@ -1197,8 +1197,8 @@ RegisterNUICallback('SendMessage', function(data, cb)
     local ChatTime = data.ChatTime
     local ChatType = data.ChatType
     local Pos = GetEntityCoords(cache.ped)
-    local NumberKey = GetKeyByNumber(ChatNumber)
-    local ChatKey = GetKeyByDate(NumberKey, ChatDate)
+    local NumberKey = getKeyByNumber(ChatNumber)
+    local ChatKey = getKeyByDate(NumberKey, ChatDate)
     if PhoneData.Chats[NumberKey] ~= nil then
         if (PhoneData.Chats[NumberKey].messages == nil) then
             PhoneData.Chats[NumberKey].messages = {}
@@ -1238,14 +1238,14 @@ RegisterNUICallback('SendMessage', function(data, cb)
                 }
             end
             TriggerServerEvent('qb-phone:server:UpdateMessages', PhoneData.Chats[NumberKey].messages, ChatNumber, false)
-            NumberKey = GetKeyByNumber(ChatNumber)
-            ReorganizeChats(NumberKey)
+            NumberKey = getKeyByNumber(ChatNumber)
+            reorganizeChats(NumberKey)
         else
             PhoneData.Chats[NumberKey].messages[#PhoneData.Chats[NumberKey].messages + 1] = {
                 date = ChatDate,
                 messages = {},
             }
-            ChatKey = GetKeyByDate(NumberKey, ChatDate)
+            ChatKey = getKeyByDate(NumberKey, ChatDate)
             if ChatType == "message" then
                 PhoneData.Chats[NumberKey].messages[ChatKey].messages[
                     #PhoneData.Chats[NumberKey].messages[ChatKey].messages + 1] = {
@@ -1280,21 +1280,21 @@ RegisterNUICallback('SendMessage', function(data, cb)
                 }
             end
             TriggerServerEvent('qb-phone:server:UpdateMessages', PhoneData.Chats[NumberKey].messages, ChatNumber, true)
-            NumberKey = GetKeyByNumber(ChatNumber)
-            ReorganizeChats(NumberKey)
+            NumberKey = getKeyByNumber(ChatNumber)
+            reorganizeChats(NumberKey)
         end
     else
         PhoneData.Chats[#PhoneData.Chats + 1] = {
-            name = IsNumberInContacts(ChatNumber),
+            name = isNumberInContacts(ChatNumber),
             number = ChatNumber,
             messages = {},
         }
-        NumberKey = GetKeyByNumber(ChatNumber)
+        NumberKey = getKeyByNumber(ChatNumber)
         PhoneData.Chats[NumberKey].messages[#PhoneData.Chats[NumberKey].messages + 1] = {
             date = ChatDate,
             messages = {},
         }
-        ChatKey = GetKeyByDate(NumberKey, ChatDate)
+        ChatKey = getKeyByDate(NumberKey, ChatDate)
         if ChatType == "message" then
             PhoneData.Chats[NumberKey].messages[ChatKey].messages[
                 #PhoneData.Chats[NumberKey].messages[ChatKey].messages + 1] = {
@@ -1329,11 +1329,11 @@ RegisterNUICallback('SendMessage', function(data, cb)
             }
         end
         TriggerServerEvent('qb-phone:server:UpdateMessages', PhoneData.Chats[NumberKey].messages, ChatNumber, true)
-        NumberKey = GetKeyByNumber(ChatNumber)
-        ReorganizeChats(NumberKey)
+        NumberKey = getKeyByNumber(ChatNumber)
+        reorganizeChats(NumberKey)
     end
 
-    local Chat = lib.callback.await('qb-phone:server:GetContactPictures', false, PhoneData.Chats[GetKeyByNumber(ChatNumber)])
+    local Chat = lib.callback.await('qb-phone:server:GetContactPictures', false, PhoneData.Chats[getKeyByNumber(ChatNumber)])
     SendNUIMessage({
         action = "UpdateChat",
         chatData = Chat,
@@ -1350,7 +1350,7 @@ RegisterNUICallback("TakePhoto", function(_, cb)
     while takePhoto do
         if IsControlJustPressed(1, 27) then -- Toogle Mode
             frontCam = not frontCam
-            CellFrontCamActivate(frontCam)
+            cellFrontCamActivate(frontCam)
         elseif IsControlJustPressed(1, 177) then -- CANCEL
             DestroyMobilePhone()
             CellCamActivate(false, false)
@@ -1383,7 +1383,7 @@ RegisterNUICallback("TakePhoto", function(_, cb)
         Wait(0)
     end
     Wait(1000)
-    OpenPhone()
+    openPhone()
 end)
 
 RegisterCommand('ping', function(_, args)
@@ -1397,7 +1397,7 @@ end)
 -- Handler Events
 
 RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
-    LoadPhone()
+    loadPhone()
 end)
 
 RegisterNetEvent('QBCore:Client:OnPlayerUnload', function()
@@ -1525,7 +1525,7 @@ end)
 
 RegisterNetEvent('qb-phone:client:AddRecentCall', function(data, time, type)
     PhoneData.RecentCalls[#PhoneData.RecentCalls + 1] = {
-        name = IsNumberInContacts(data.number),
+        name = isNumberInContacts(data.number),
         time = time,
         type = type,
         number = data.number,
@@ -1617,7 +1617,7 @@ RegisterNetEvent('qb-phone:client:BillingEmail', function(data, paid, name)
     end
 end)
 
-RegisterNetEvent('qb-phone:client:CancelCall', function()
+RegisterNetEvent('qb-phone:client:cancelCall', function()
     if PhoneData.CallData.CallType == "ongoing" then
         SendNUIMessage({
             action = "CancelOngoingCall"
@@ -1678,7 +1678,7 @@ RegisterNetEvent('qb-phone:client:GetCalled', function(CallerNumber, CallId, Ano
     local RepeatCount = 0
     local CallData = {
         number = CallerNumber,
-        name = IsNumberInContacts(CallerNumber),
+        name = isNumberInContacts(CallerNumber),
         anonymous = AnonymousCall
     }
 
@@ -1746,19 +1746,19 @@ RegisterNetEvent('qb-phone:client:GetCalled', function(CallerNumber, CallId, Ano
 end)
 
 RegisterNetEvent('qb-phone:client:UpdateMessages', function(ChatMessages, SenderNumber, New)
-    local NumberKey = GetKeyByNumber(SenderNumber)
+    local NumberKey = getKeyByNumber(SenderNumber)
 
     if New then
         PhoneData.Chats[#PhoneData.Chats + 1] = {
-            name = IsNumberInContacts(SenderNumber),
+            name = isNumberInContacts(SenderNumber),
             number = SenderNumber,
             messages = {},
         }
 
-        NumberKey = GetKeyByNumber(SenderNumber)
+        NumberKey = getKeyByNumber(SenderNumber)
 
         PhoneData.Chats[NumberKey] = {
-            name = IsNumberInContacts(SenderNumber),
+            name = isNumberInContacts(SenderNumber),
             number = SenderNumber,
             messages = ChatMessages
         }
@@ -1775,7 +1775,7 @@ RegisterNetEvent('qb-phone:client:UpdateMessages', function(ChatMessages, Sender
                     action = "PhoneNotification",
                     PhoneNotify = {
                         title = "Whatsapp",
-                        text = "New message from " .. IsNumberInContacts(SenderNumber) .. "!",
+                        text = "New message from " .. isNumberInContacts(SenderNumber) .. "!",
                         icon = "fab fa-whatsapp",
                         color = "#25D366",
                         timeout = 1500,
@@ -1794,14 +1794,14 @@ RegisterNetEvent('qb-phone:client:UpdateMessages', function(ChatMessages, Sender
                 })
             end
 
-            NumberKey = GetKeyByNumber(SenderNumber)
-            ReorganizeChats(NumberKey)
+            NumberKey = getKeyByNumber(SenderNumber)
+            reorganizeChats(NumberKey)
 
             Wait(100)
             local Chats = lib.callback.await('qb-phone:server:GetContactPictures', false, PhoneData.Chats)
             SendNUIMessage({
                 action = "UpdateChat",
-                chatData = Chats[GetKeyByNumber(SenderNumber)],
+                chatData = Chats[getKeyByNumber(SenderNumber)],
                 chatNumber = SenderNumber,
                 Chats = Chats,
             })
@@ -1810,7 +1810,7 @@ RegisterNetEvent('qb-phone:client:UpdateMessages', function(ChatMessages, Sender
                 action = "PhoneNotification",
                 PhoneNotify = {
                     title = "Whatsapp",
-                    text = "New message from " .. IsNumberInContacts(SenderNumber) .. "!",
+                    text = "New message from " .. isNumberInContacts(SenderNumber) .. "!",
                     icon = "fab fa-whatsapp",
                     color = "#25D366",
                     timeout = 3500,
@@ -1834,7 +1834,7 @@ RegisterNetEvent('qb-phone:client:UpdateMessages', function(ChatMessages, Sender
                     action = "PhoneNotification",
                     PhoneNotify = {
                         title = "Whatsapp",
-                        text = "New message from " .. IsNumberInContacts(SenderNumber) .. "!",
+                        text = "New message from " .. isNumberInContacts(SenderNumber) .. "!",
                         icon = "fab fa-whatsapp",
                         color = "#25D366",
                         timeout = 1500,
@@ -1853,14 +1853,14 @@ RegisterNetEvent('qb-phone:client:UpdateMessages', function(ChatMessages, Sender
                 })
             end
 
-            NumberKey = GetKeyByNumber(SenderNumber)
-            ReorganizeChats(NumberKey)
+            NumberKey = getKeyByNumber(SenderNumber)
+            reorganizeChats(NumberKey)
 
             Wait(100)
             local Chats = lib.callback.await('qb-phone:server:GetContactPictures', false, PhoneData.Chats)
             SendNUIMessage({
                 action = "UpdateChat",
-                chatData = Chats[GetKeyByNumber(SenderNumber)],
+                chatData = Chats[getKeyByNumber(SenderNumber)],
                 chatNumber = SenderNumber,
                 Chats = Chats,
             })
@@ -1869,15 +1869,15 @@ RegisterNetEvent('qb-phone:client:UpdateMessages', function(ChatMessages, Sender
                 action = "PhoneNotification",
                 PhoneNotify = {
                     title = "Whatsapp",
-                    text = "New message from " .. IsNumberInContacts(SenderNumber) .. "!",
+                    text = "New message from " .. isNumberInContacts(SenderNumber) .. "!",
                     icon = "fab fa-whatsapp",
                     color = "#25D366",
                     timeout = 3500,
                 },
             })
 
-            NumberKey = GetKeyByNumber(SenderNumber)
-            ReorganizeChats(NumberKey)
+            NumberKey = getKeyByNumber(SenderNumber)
+            reorganizeChats(NumberKey)
 
             Config.PhoneApplications['whatsapp'].Alerts = Config.PhoneApplications['whatsapp'].Alerts + 1
             TriggerServerEvent('qb-phone:server:SetPhoneAlerts', "whatsapp")
@@ -1901,7 +1901,7 @@ RegisterNetEvent('qb-phone:client:RemoveBankMoney', function(amount)
 end)
 
 RegisterNetEvent('qb-phone:RefreshPhone', function()
-    LoadPhone()
+    loadPhone()
     SetTimeout(250, function()
         SendNUIMessage({
             action = "RefreshAlerts",
@@ -1967,14 +1967,14 @@ RegisterNetEvent('qb-phone:client:UpdateHashtags', function(Handle, msgData)
     })
 end)
 
-RegisterNetEvent('qb-phone:client:AnswerCall', function()
+RegisterNetEvent('qb-phone:client:answerCall', function()
     if (PhoneData.CallData.CallType == "incoming" or PhoneData.CallData.CallType == "outgoing") and
         PhoneData.CallData.InCall and not PhoneData.CallData.AnsweredCall then
         PhoneData.CallData.CallType = "ongoing"
         PhoneData.CallData.AnsweredCall = true
         PhoneData.CallData.CallTime = 0
 
-        SendNUIMessage({ action = "AnswerCall", CallData = PhoneData.CallData })
+        SendNUIMessage({ action = "answerCall", CallData = PhoneData.CallData })
         SendNUIMessage({ action = "SetupHomeCall", CallData = PhoneData.CallData })
 
         TriggerServerEvent('qb-phone:server:SetCallState', true)
@@ -2079,7 +2079,7 @@ RegisterNetEvent("qb-phone:client:CustomNotification",
 
 CreateThread(function()
     Wait(500)
-    LoadPhone()
+    loadPhone()
 end)
 
 CreateThread(function()
@@ -2087,7 +2087,7 @@ CreateThread(function()
         if PhoneData.isOpen then
             SendNUIMessage({
                 action = "UpdateTime",
-                InGameTime = CalculateTimeToDisplay(),
+                InGameTime = calculateTimeToDisplay(),
             })
         end
         Wait(1000)

@@ -1,7 +1,7 @@
 local phoneProp = 0
 local phoneModel = `prop_npc_phone_02`
 
-local function CheckAnimLoop()
+local function checkAnimLoop()
     CreateThread(function()
         while PhoneData.AnimationData.lib ~= nil and PhoneData.AnimationData.anim ~= nil do
             if not IsEntityPlayingAnim(cache.ped, PhoneData.AnimationData.lib, PhoneData.AnimationData.anim, 3) then
@@ -43,5 +43,5 @@ function DoPhoneAnimation(anim)
     TaskPlayAnim(cache.ped, AnimationLib, AnimationStatus, 3.0, 3.0, -1, 50, 0, false, false, false)
     PhoneData.AnimationData.lib = AnimationLib
     PhoneData.AnimationData.anim = AnimationStatus
-    CheckAnimLoop()
+    checkAnimLoop()
 end

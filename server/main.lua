@@ -13,7 +13,7 @@ local VEHICLES = exports.qbx_core:GetVehiclesByName()
 
 -- Functions
 
-local function GetOnlineStatus(number)
+local function getOnlineStatus(number)
     local Target = exports.qbx_core:GetPlayerByPhone(number)
     local retval = false
     if Target ~= nil then
@@ -22,7 +22,7 @@ local function GetOnlineStatus(number)
     return retval
 end
 
-local function GenerateMailId()
+local function generateMailId()
     return math.random(111111, 999999)
 end
 
@@ -70,7 +70,7 @@ function QBPhone.SetPhoneAlerts(citizenid, app, alerts)
     end
 end
 
-local function SplitStringToArray(string)
+local function splitStringToArray(string)
     local retval = {}
     for i in string.gmatch(string, "%S+") do
         retval[#retval+1] = i
@@ -78,7 +78,7 @@ local function SplitStringToArray(string)
     return retval
 end
 
-local function GenerateOwnerName()
+local function generateOwnerName()
     local names = {
         [1] = { name = "Bailey Sykes",          citizenid = "DSH091G93" },
         [2] = { name = "Aroush Goodwin",        citizenid = "AVH09M193" },
@@ -160,7 +160,7 @@ lib.callback.register('qb-phone:server:GetPhoneData', function(source)
         local result = MySQL.query.await('SELECT * FROM player_contacts WHERE citizenid = ? ORDER BY name ASC', {Player.PlayerData.citizenid})
         if result[1] ~= nil then
             for _, v in pairs(result) do
-                v.status = GetOnlineStatus(v.number)
+                v.status = getOnlineStatus(v.number)
             end
 
             PhoneData.PlayerContacts = result
@@ -346,7 +346,7 @@ lib.callback.register('qb-phone:server:FetchResult', function(search)
     local ApaData = {}
     local query = 'SELECT * FROM `players` WHERE `citizenid` = "' .. search .. '"'
     -- Split on " " and check each var individual
-    local searchParameters = SplitStringToArray(search)
+    local searchParameters = splitStringToArray(search)
     -- Construct query dynamicly for individual parm check
     if #searchParameters > 1 then
         query = query .. ' OR `charinfo` LIKE "%' .. searchParameters[1] .. '%"'
@@ -429,7 +429,7 @@ lib.callback.register('qb-phone:server:GetVehicleSearchResults', function(search
                 label = "Brand unknown.."
             }
         else
-            local ownerInfo = GenerateOwnerName()
+            local ownerInfo = generateOwnerName()
             GeneratedPlates[search] = {
                 plate = search,
                 status = true,
@@ -465,7 +465,7 @@ lib.callback.register('qb-phone:server:GetPicture', function(source, plate)
         elseif GeneratedPlates ~= nil and GeneratedPlates[plate] ~= nil then
             vehicleData = GeneratedPlates[plate]
         else
-            local ownerInfo = GenerateOwnerName()
+            local ownerInfo = generateOwnerName()
             GeneratedPlates[plate] = {
                 plate = plate,
                 status = true,
@@ -620,9 +620,9 @@ RegisterNetEvent('qb-phone:server:sendNewMail', function(mailData)
     local src = source
     local Player = exports.qbx_core:GetPlayer(src)
     if mailData.button == nil then
-        MySQL.insert('INSERT INTO player_mails (`citizenid`, `sender`, `subject`, `message`, `mailid`, `read`) VALUES (?, ?, ?, ?, ?, ?)', {Player.PlayerData.citizenid, mailData.sender, mailData.subject, mailData.message, GenerateMailId(), 0})
+        MySQL.insert('INSERT INTO player_mails (`citizenid`, `sender`, `subject`, `message`, `mailid`, `read`) VALUES (?, ?, ?, ?, ?, ?)', {Player.PlayerData.citizenid, mailData.sender, mailData.subject, mailData.message, generateMailId(), 0})
     else
-        MySQL.insert('INSERT INTO player_mails (`citizenid`, `sender`, `subject`, `message`, `mailid`, `read`, `button`) VALUES (?, ?, ?, ?, ?, ?, ?)', {Player.PlayerData.citizenid, mailData.sender, mailData.subject, mailData.message, GenerateMailId(), 0, json.encode(mailData.button)})
+        MySQL.insert('INSERT INTO player_mails (`citizenid`, `sender`, `subject`, `message`, `mailid`, `read`, `button`) VALUES (?, ?, ?, ?, ?, ?, ?)', {Player.PlayerData.citizenid, mailData.sender, mailData.subject, mailData.message, generateMailId(), 0, json.encode(mailData.button)})
     end
     TriggerClientEvent('qb-phone:client:NewMailNotify', src, mailData)
     SetTimeout(200, function()
@@ -645,10 +645,10 @@ RegisterNetEvent('qb-phone:server:sendNewMailToOffline', function(citizenid, mai
     if Player then
         local src = Player.PlayerData.source
         if mailData.button == nil then
-            MySQL.insert('INSERT INTO player_mails (`citizenid`, `sender`, `subject`, `message`, `mailid`, `read`) VALUES (?, ?, ?, ?, ?, ?)', {Player.PlayerData.citizenid, mailData.sender, mailData.subject, mailData.message, GenerateMailId(), 0})
+            MySQL.insert('INSERT INTO player_mails (`citizenid`, `sender`, `subject`, `message`, `mailid`, `read`) VALUES (?, ?, ?, ?, ?, ?)', {Player.PlayerData.citizenid, mailData.sender, mailData.subject, mailData.message, generateMailId(), 0})
             TriggerClientEvent('qb-phone:client:NewMailNotify', src, mailData)
         else
-            MySQL.insert('INSERT INTO player_mails (`citizenid`, `sender`, `subject`, `message`, `mailid`, `read`, `button`) VALUES (?, ?, ?, ?, ?, ?, ?)', {Player.PlayerData.citizenid, mailData.sender, mailData.subject, mailData.message, GenerateMailId(), 0, json.encode(mailData.button)})
+            MySQL.insert('INSERT INTO player_mails (`citizenid`, `sender`, `subject`, `message`, `mailid`, `read`, `button`) VALUES (?, ?, ?, ?, ?, ?, ?)', {Player.PlayerData.citizenid, mailData.sender, mailData.subject, mailData.message, generateMailId(), 0, json.encode(mailData.button)})
             TriggerClientEvent('qb-phone:client:NewMailNotify', src, mailData)
         end
         SetTimeout(200, function()
@@ -666,9 +666,9 @@ RegisterNetEvent('qb-phone:server:sendNewMailToOffline', function(citizenid, mai
         end)
     else
         if mailData.button == nil then
-            MySQL.insert('INSERT INTO player_mails (`citizenid`, `sender`, `subject`, `message`, `mailid`, `read`) VALUES (?, ?, ?, ?, ?, ?)', {citizenid, mailData.sender, mailData.subject, mailData.message, GenerateMailId(), 0})
+            MySQL.insert('INSERT INTO player_mails (`citizenid`, `sender`, `subject`, `message`, `mailid`, `read`) VALUES (?, ?, ?, ?, ?, ?)', {citizenid, mailData.sender, mailData.subject, mailData.message, generateMailId(), 0})
         else
-            MySQL.insert('INSERT INTO player_mails (`citizenid`, `sender`, `subject`, `message`, `mailid`, `read`, `button`) VALUES (?, ?, ?, ?, ?, ?, ?)', {citizenid, mailData.sender, mailData.subject, mailData.message, GenerateMailId(), 0, json.encode(mailData.button)})
+            MySQL.insert('INSERT INTO player_mails (`citizenid`, `sender`, `subject`, `message`, `mailid`, `read`, `button`) VALUES (?, ?, ?, ?, ?, ?, ?)', {citizenid, mailData.sender, mailData.subject, mailData.message, generateMailId(), 0, json.encode(mailData.button)})
         end
     end
 end)
@@ -676,9 +676,9 @@ end)
 RegisterNetEvent('qb-phone:server:sendNewEventMail', function(citizenid, mailData)
     local Player = exports.qbx_core:GetPlayerByCitizenId(citizenid)
     if mailData.button == nil then
-        MySQL.insert('INSERT INTO player_mails (`citizenid`, `sender`, `subject`, `message`, `mailid`, `read`) VALUES (?, ?, ?, ?, ?, ?)', {citizenid, mailData.sender, mailData.subject, mailData.message, GenerateMailId(), 0})
+        MySQL.insert('INSERT INTO player_mails (`citizenid`, `sender`, `subject`, `message`, `mailid`, `read`) VALUES (?, ?, ?, ?, ?, ?)', {citizenid, mailData.sender, mailData.subject, mailData.message, generateMailId(), 0})
     else
-        MySQL.insert('INSERT INTO player_mails (`citizenid`, `sender`, `subject`, `message`, `mailid`, `read`, `button`) VALUES (?, ?, ?, ?, ?, ?, ?)', {citizenid, mailData.sender, mailData.subject, mailData.message, GenerateMailId(), 0, json.encode(mailData.button)})
+        MySQL.insert('INSERT INTO player_mails (`citizenid`, `sender`, `subject`, `message`, `mailid`, `read`, `button`) VALUES (?, ?, ?, ?, ?, ?, ?)', {citizenid, mailData.sender, mailData.subject, mailData.message, generateMailId(), 0, json.encode(mailData.button)})
     end
     SetTimeout(200, function()
         local mails = MySQL.query.await('SELECT * FROM player_mails WHERE citizenid = ? ORDER BY `date` ASC', {citizenid})
