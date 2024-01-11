@@ -1,5 +1,5 @@
 local config = require 'config.client'
-local apartmentConfig = require '@qbx_apartments.config.shared'
+--local apartmentConfig = require '@qbx_apartments.config.shared'
 local VEHICLES = exports.qbx_core:GetVehiclesByName()
 local PlayerJob = {}
 local patt = "[?!@#]"
@@ -439,7 +439,7 @@ RegisterCommand('phone', function()
             exports.qbx_core:Notify("Action not available at the moment..", "error")
         end
     end
-end)
+end, false)
 
 RegisterKeyMapping('phone', 'Open Phone', 'keyboard', 'M')
 
@@ -795,7 +795,7 @@ RegisterNUICallback('InstallApplication', function(data, cb)
         return
     end
 
-    if NewSlot <= config.maxSlotsthen
+    if NewSlot <= config.maxSlotsthen then
         TriggerServerEvent('qb-phone:server:InstallApplication', {
             app = data.app,
         })
@@ -814,7 +814,7 @@ RegisterNUICallback('RemoveApplication', function(data, cb)
 end)
 
 RegisterNUICallback('GetTruckerData', function(_, cb)
-    local TruckerMeta = QBX.PlayerData.metadata["jobrep"]["trucker"]
+    local TruckerMeta = QBX.PlayerData.metadata.jobrep.trucker
     local TierData = exports.qbx_trucker:GetTier(TruckerMeta)
     cb(TierData)
 end)
@@ -1105,7 +1105,7 @@ RegisterNUICallback('SetupStoreApps', function(_, cb)
     local PlayerData = QBX.PlayerData
     local data = {
         StoreApps = config.storeApps,
-        PhoneData = PlayerData.metadata["phonedata"]
+        PhoneData = PlayerData.metadata.phonedata
     }
     cb(data)
 end)

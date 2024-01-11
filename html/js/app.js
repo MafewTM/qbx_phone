@@ -548,7 +548,7 @@ $(document).ready(function(){
                 QB.Phone.Data.IsOpen = true;
                 QB.Phone.Data.PlayerData = event.data.PlayerData;
                 break;
-            case "LoadPhoneData":
+            case "loadPhoneData":
                 QB.Phone.Functions.LoadPhoneData(event.data);
                 break;
             case "UpdateTime":

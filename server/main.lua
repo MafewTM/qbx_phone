@@ -154,7 +154,7 @@ lib.callback.register('qb-phone:server:GetPhoneData', function(source)
             CryptoTransactions = {},
             Tweets = {},
             Images = {},
-            InstalledApps = Player.PlayerData.metadata["phonedata"].InstalledApps
+            InstalledApps = Player.PlayerData.metadata.phonedata.InstalledApps
         }
         PhoneData.Adverts = Adverts
 
@@ -379,7 +379,7 @@ lib.callback.register('qb-phone:server:FetchResult', function(search)
                 nationality = charinfo.nationality,
                 gender = charinfo.gender,
                 warrant = false,
-                driverlicense = metadata["licences"]["driver"],
+                driverlicense = metadata.licenses.driver,
                 appartmentdata = appiepappie
             }
         end
@@ -407,7 +407,7 @@ lib.callback.register('qb-phone:server:GetVehicleSearchResults', function(search
                         status = true,
                         owner = charinfo.firstname .. " " .. charinfo.lastname,
                         citizenid = result[k].citizenid,
-                        label = vehicleInfo["name"]
+                        label = vehicleInfo.name
                     }
                 else
                     searchData[#searchData+1] = {
@@ -718,7 +718,7 @@ RegisterNetEvent('qb-phone:server:MentionedPlayer', function(firstName, lastName
             if (Player.PlayerData.charinfo.firstname == firstName and Player.PlayerData.charinfo.lastname == lastName) then
                 QBPhone.SetPhoneAlerts(Player.PlayerData.citizenid, "twitter")
                 QBPhone.AddMentionedTweet(Player.PlayerData.citizenid, TweetMessage)
-                TriggerClientEvent('qb-phone:client:GetMentioned', Player.PlayerData.source, TweetMessage, AppAlerts[Player.PlayerData.citizenid]["twitter"])
+                TriggerClientEvent('qb-phone:client:GetMentioned', Player.PlayerData.source, TweetMessage, AppAlerts[Player.PlayerData.citizenid].twitter)
             else
                 local query1 = '%' .. firstName .. '%'
                 local query2 = '%' .. lastName .. '%'
@@ -975,8 +975,8 @@ end)
 RegisterNetEvent('qb-phone:server:InstallApplication', function(ApplicationData)
     local src = source
     local Player = exports.qbx_core:GetPlayer(src)
-    Player.PlayerData.metadata["phonedata"].InstalledApps[ApplicationData.app] = ApplicationData
-    Player.Functions.SetMetaData("phonedata", Player.PlayerData.metadata["phonedata"])
+    Player.PlayerData.metadata.phonedata.InstalledApps[ApplicationData.app] = ApplicationData
+    Player.Functions.SetMetaData("phonedata", Player.PlayerData.metadata.phonedata)
 
     -- TriggerClientEvent('qb-phone:RefreshPhone', src)
 end)
@@ -984,8 +984,8 @@ end)
 RegisterNetEvent('qb-phone:server:RemoveInstallation', function(App)
     local src = source
     local Player = exports.qbx_core:GetPlayer(src)
-    Player.PlayerData.metadata["phonedata"].InstalledApps[App] = nil
-    Player.Functions.SetMetaData("phonedata", Player.PlayerData.metadata["phonedata"])
+    Player.PlayerData.metadata.phonedata.InstalledApps[App] = nil
+    Player.Functions.SetMetaData("phonedata", Player.PlayerData.metadata.phonedata)
 
     -- TriggerClientEvent('qb-phone:RefreshPhone', src)
 end)
@@ -1024,7 +1024,7 @@ lib.addCommand('setmetadata', {help = 'Set Player Metadata (God Only)', restrict
     if args[1] then
         if args[1] == "trucker" then
             if args[2] then
-                local newrep = Player.PlayerData.metadata["jobrep"]
+                local newrep = Player.PlayerData.metadata.jobrep
                 newrep.trucker = tonumber(args[2])
                 Player.Functions.SetMetaData("jobrep", newrep)
             end
