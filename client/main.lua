@@ -1,3 +1,4 @@
+local config = require 'config.client'
 local apartmentConfig = require '@qbx_apartments.config.shared'
 local VEHICLES = exports.qbx_core:GetVehiclesByName()
 local PlayerJob = {}
@@ -145,13 +146,13 @@ local function loadPhone()
 
     PlayerJob = QBX.PlayerData.job
     PhoneData.PlayerData = QBX.PlayerData
-    local PhoneMeta = PhoneData.PlayerData.metadata["phone"]
+    local PhoneMeta = PhoneData.PlayerData.metadata.phone
     PhoneData.MetaData = PhoneMeta
 
     if pData.InstalledApps ~= nil and next(pData.InstalledApps) ~= nil then
         for _, v in pairs(pData.InstalledApps) do
-            local AppData = Config.StoreApps[v.app]
-            Config.PhoneApplications[v.app] = {
+            local AppData = config.storeApps[v.app]
+            config.phoneApps[v.app] = {
                 app = v.app,
                 color = AppData.color,
                 icon = AppData.icon,
@@ -173,7 +174,7 @@ local function loadPhone()
 
     if pData.Applications ~= nil and next(pData.Applications) ~= nil then
         for k, v in pairs(pData.Applications) do
-            Config.PhoneApplications[k].Alerts = v
+            config.phoneApps[k].Alerts = v
         end
     end
 
@@ -233,7 +234,7 @@ local function loadPhone()
         PhoneData = PhoneData,
         PlayerData = PhoneData.PlayerData,
         PlayerJob = PhoneData.PlayerData.job,
-        applications = Config.PhoneApplications,
+        applications = config.phoneApps,
         PlayerId = GetPlayerServerId(cache.playerId)
     })
 end
@@ -246,7 +247,7 @@ local function openPhone()
         SendNUIMessage({
             action = "open",
             Tweets = PhoneData.Tweets,
-            AppData = Config.PhoneApplications,
+            AppData = config.phoneApps,
             CallData = PhoneData.CallData,
             PlayerData = PhoneData.PlayerData,
         })
@@ -348,16 +349,16 @@ local function callContact(CallData, AnonymousCall)
         AnonymousCall)
     TriggerServerEvent('qb-phone:server:SetCallState', true)
 
-    for _ = 1, Config.CallRepeats + 1, 1 do
+    for _ = 1, config.callRepeats + 1, 1 do
         if not PhoneData.CallData.AnsweredCall then
-            if RepeatCount + 1 ~= Config.CallRepeats + 1 then
+            if RepeatCount + 1 ~= config.callRepeats + 1 then
                 if PhoneData.CallData.InCall then
                     RepeatCount = RepeatCount + 1
                     TriggerServerEvent("InteractSound_SV:PlayOnSource", "demo", 0.1)
                 else
                     break
                 end
-                Wait(Config.RepeatTimeout)
+                Wait(config.repeatTimeout)
             else
                 cancelCall()
                 break
@@ -466,8 +467,8 @@ end)
 
 RegisterNUICallback('ClearRecentAlerts', function(_, cb)
     TriggerServerEvent('qb-phone:server:SetPhoneAlerts', "phone", 0)
-    Config.PhoneApplications["phone"].Alerts = 0
-    SendNUIMessage({ action = "RefreshAppAlerts", AppData = Config.PhoneApplications })
+    config.phoneApps.phone.Alerts = 0
+    SendNUIMessage({ action = "RefreshAppAlerts", AppData = config.phoneApps })
     cb("ok")
 end)
 
@@ -614,8 +615,8 @@ RegisterNUICallback('ClearAlerts', function(data, cb)
     local ChatKey = getKeyByNumber(chat)
 
     if PhoneData.Chats[ChatKey].Unread ~= nil then
-        local newAlerts = (Config.PhoneApplications['whatsapp'].Alerts - PhoneData.Chats[ChatKey].Unread)
-        Config.PhoneApplications['whatsapp'].Alerts = newAlerts
+        local newAlerts = (config.phoneApps.whatsapp.Alerts - PhoneData.Chats[ChatKey].Unread)
+        config.phoneApps.whataspp.Alerts = newAlerts
         TriggerServerEvent('qb-phone:server:SetPhoneAlerts', "whatsapp", newAlerts)
 
         PhoneData.Chats[ChatKey].Unread = 0
@@ -624,7 +625,7 @@ RegisterNUICallback('ClearAlerts', function(data, cb)
             action = "RefreshWhatsappAlerts",
             Chats = PhoneData.Chats,
         })
-        SendNUIMessage({ action = "RefreshAppAlerts", AppData = Config.PhoneApplications })
+        SendNUIMessage({ action = "RefreshAppAlerts", AppData = config.phoneApps })
     end
     cb("ok")
 end)
@@ -787,14 +788,14 @@ end
 local CanDownloadApps = false
 
 RegisterNUICallback('InstallApplication', function(data, cb)
-    local ApplicationData = Config.StoreApps[data.app]
+    local ApplicationData = config.storeApps[data.app]
     local NewSlot = getFirstAvailableSlot()
 
     if not CanDownloadApps then
         return
     end
 
-    if NewSlot <= Config.MaxSlots then
+    if NewSlot <= config.maxSlotsthen
         TriggerServerEvent('qb-phone:server:InstallApplication', {
             app = data.app,
         })
@@ -1103,32 +1104,32 @@ end)
 RegisterNUICallback('SetupStoreApps', function(_, cb)
     local PlayerData = QBX.PlayerData
     local data = {
-        StoreApps = Config.StoreApps,
+        StoreApps = config.storeApps,
         PhoneData = PlayerData.metadata["phonedata"]
     }
     cb(data)
 end)
 
 RegisterNUICallback('ClearMentions', function(_, cb)
-    Config.PhoneApplications["twitter"].Alerts = 0
+    config.phoneApps.twitter.Alerts = 0
     SendNUIMessage({
         action = "RefreshAppAlerts",
-        AppData = Config.PhoneApplications
+        AppData = config.phoneApps
     })
     TriggerServerEvent('qb-phone:server:SetPhoneAlerts', "twitter", 0)
-    SendNUIMessage({ action = "RefreshAppAlerts", AppData = Config.PhoneApplications })
+    SendNUIMessage({ action = "RefreshAppAlerts", AppData = config.phoneApps })
     cb('ok')
 end)
 
 RegisterNUICallback('ClearGeneralAlerts', function(data, cb)
     SetTimeout(400, function()
-        Config.PhoneApplications[data.app].Alerts = 0
+        config.phoneApps[data.app].Alerts = 0
         SendNUIMessage({
             action = "RefreshAppAlerts",
-            AppData = Config.PhoneApplications
+            AppData = config.phoneApps
         })
         TriggerServerEvent('qb-phone:server:SetPhoneAlerts', data.app, 0)
-        SendNUIMessage({ action = "RefreshAppAlerts", AppData = Config.PhoneApplications })
+        SendNUIMessage({ action = "RefreshAppAlerts", AppData = config.phoneApps })
         cb('ok')
     end)
 end)
@@ -1430,7 +1431,7 @@ RegisterNetEvent('QBCore:Client:OnJobUpdate', function(JobInfo)
     SendNUIMessage({
         action = "UpdateApplications",
         JobData = JobInfo,
-        applications = Config.PhoneApplications
+        applications = config.phoneApps
     })
 
     PlayerJob = JobInfo
@@ -1532,10 +1533,10 @@ RegisterNetEvent('qb-phone:client:AddRecentCall', function(data, time, type)
         anonymous = data.anonymous
     }
     TriggerServerEvent('qb-phone:server:SetPhoneAlerts', "phone")
-    Config.PhoneApplications["phone"].Alerts = Config.PhoneApplications["phone"].Alerts + 1
+    config.phoneApps.phone.Alerts = config.phoneApps.phone.Alerts + 1
     SendNUIMessage({
         action = "RefreshAppAlerts",
-        AppData = Config.PhoneApplications
+        AppData = config.phoneApps
     })
 end)
 
@@ -1563,7 +1564,7 @@ RegisterNetEvent('qb-phone:client:NewMailNotify', function(MailData)
             timeout = 1500,
         },
     })
-    Config.PhoneApplications['mail'].Alerts = Config.PhoneApplications['mail'].Alerts + 1
+    config.phoneApps.mail.Alerts = config.phoneApps.mail.Alerts + 1
     TriggerServerEvent('qb-phone:server:SetPhoneAlerts', "mail")
 end)
 
@@ -1699,9 +1700,9 @@ RegisterNetEvent('qb-phone:client:GetCalled', function(CallerNumber, CallId, Ano
         CallData = PhoneData.CallData,
     })
 
-    for _ = 1, Config.CallRepeats + 1, 1 do
+    for _ = 1, config.callRepeats + 1, 1 do
         if not PhoneData.CallData.AnsweredCall then
-            if RepeatCount + 1 ~= Config.CallRepeats + 1 then
+            if RepeatCount + 1 ~= config.callRepeats + 1 then
                 if PhoneData.CallData.InCall then
                     local HasPhone = lib.callback.await('qb-phone:server:HasPhone', false)
                     if HasPhone then
@@ -1727,7 +1728,7 @@ RegisterNetEvent('qb-phone:client:GetCalled', function(CallerNumber, CallId, Ano
                     TriggerServerEvent('qb-phone:server:AddRecentCall', "missed", CallData)
                     break
                 end
-                Wait(Config.RepeatTimeout)
+                Wait(config.repeatTimeout)
             else
                 SendNUIMessage({
                     action = "IncomingCallAlert",
@@ -1816,7 +1817,7 @@ RegisterNetEvent('qb-phone:client:UpdateMessages', function(ChatMessages, Sender
                     timeout = 3500,
                 },
             })
-            Config.PhoneApplications['whatsapp'].Alerts = Config.PhoneApplications['whatsapp'].Alerts + 1
+            config.phoneApps.whatsapp.Alerts = config.phoneApps.whatsapp.Alerts + 1
             TriggerServerEvent('qb-phone:server:SetPhoneAlerts', "whatsapp")
         end
     else
@@ -1879,7 +1880,7 @@ RegisterNetEvent('qb-phone:client:UpdateMessages', function(ChatMessages, Sender
             NumberKey = getKeyByNumber(SenderNumber)
             reorganizeChats(NumberKey)
 
-            Config.PhoneApplications['whatsapp'].Alerts = Config.PhoneApplications['whatsapp'].Alerts + 1
+            config.phoneApps.whatsapp.Alerts = config.phoneApps.whatsapp.Alerts + 1
             TriggerServerEvent('qb-phone:server:SetPhoneAlerts', "whatsapp")
         end
     end
@@ -1905,7 +1906,7 @@ RegisterNetEvent('qb-phone:RefreshPhone', function()
     SetTimeout(250, function()
         SendNUIMessage({
             action = "RefreshAlerts",
-            AppData = Config.PhoneApplications,
+            AppData = config.phoneApps,
         })
     end)
 end)
@@ -1946,8 +1947,8 @@ RegisterNetEvent('qb-phone:client:AddNewSuggestion', function(SuggestionData)
             timeout = 1500,
         },
     })
-    Config.PhoneApplications["phone"].Alerts = Config.PhoneApplications["phone"].Alerts + 1
-    TriggerServerEvent('qb-phone:server:SetPhoneAlerts', "phone", Config.PhoneApplications["phone"].Alerts)
+    config.phoneApps.phone.Alerts = config.phoneApps.phone.Alerts + 1
+    TriggerServerEvent('qb-phone:server:SetPhoneAlerts', "phone", config.phoneApps.phone.Alerts)
 end)
 
 RegisterNetEvent('qb-phone:client:UpdateHashtags', function(Handle, msgData)
@@ -2046,14 +2047,14 @@ RegisterNetEvent('qb-phone:client:UpdateLapraces', function()
 end)
 
 RegisterNetEvent('qb-phone:client:GetMentioned', function(TweetMessage, AppAlerts)
-    Config.PhoneApplications["twitter"].Alerts = AppAlerts
+    config.phoneApps.twitter.Alerts = AppAlerts
     SendNUIMessage({ action = "PhoneNotification",
         PhoneNotify = { title = "You have been mentioned in a Tweet!", text = TweetMessage.message,
             icon = "fab fa-twitter", color = "#1DA1F2", }, })
     TweetMessage = { firstName = TweetMessage.firstName, lastName = TweetMessage.lastName,
         message = escape_str(TweetMessage.message), time = TweetMessage.time, picture = TweetMessage.picture }
     PhoneData.MentionedTweets[#PhoneData.MentionedTweets + 1] = TweetMessage
-    SendNUIMessage({ action = "RefreshAppAlerts", AppData = Config.PhoneApplications })
+    SendNUIMessage({ action = "RefreshAppAlerts", AppData = config.phoneApps })
     SendNUIMessage({ action = "UpdateMentionedTweets", Tweets = PhoneData.MentionedTweets })
 end)
 

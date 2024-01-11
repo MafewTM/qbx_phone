@@ -62,10 +62,10 @@ ensure qb-banking
 
 Config = Config or {}
 
-Config.RepeatTimeout = 2000 -- Timeout for unanswered call notification
-Config.CallRepeats = 10 -- Repeats for unanswered call notification
+config.repeatTimeout = 2000 -- Timeout for unanswered call notification
+config.callRepeats = 10 -- Repeats for unanswered call notification
 Config.OpenPhone = 244 -- Key to open phone display
-Config.PhoneApplications = {
+config.phoneApps = {
     ["phone"] = { -- Needs to be unique
         app = "phone", -- App route
         color = "#04b543", -- App icon color

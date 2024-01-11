@@ -1,3 +1,4 @@
+local config = require 'config.server'
 local garageConfig = require '@qbx_garages.config.shared'
 local QBPhone = {}
 local AppAlerts = {}
@@ -216,7 +217,7 @@ lib.callback.register('qb-phone:server:GetPhoneData', function(source)
             PhoneData.Hashtags = Hashtags
         end
 
-        local Tweets = MySQL.query.await('SELECT * FROM phone_tweets WHERE `date` > NOW() - INTERVAL ? hour', {Config.TweetDuration})
+        local Tweets = MySQL.query.await('SELECT * FROM phone_tweets WHERE `date` > NOW() - INTERVAL ? hour', {config.tweetDuration})
 
         if Tweets ~= nil and next(Tweets) ~= nil then
             PhoneData.Tweets = Tweets
@@ -255,15 +256,15 @@ lib.callback.register('qb-phone:server:PayInvoice', function(source, society, am
     local Ply = exports.qbx_core:GetPlayer(source)
     local SenderPly = exports.qbx_core:GetPlayerByCitizenId(sendercitizenid)
     local invoiceMailData = {}
-    if SenderPly and Config.BillingCommissions[society] then
-        local commission = math.round(amount * Config.BillingCommissions[society])
+    if SenderPly and config.billingCommissions[society] then
+        local commission = math.round(amount * config.billingCommissions[society])
         SenderPly.Functions.AddMoney('bank', commission)
         invoiceMailData = {
             sender = 'Billing Department',
             subject = 'Commission Received',
             message = string.format('You received a commission check of $%s when %s %s paid a bill of $%s.', commission, Ply.PlayerData.charinfo.firstname, Ply.PlayerData.charinfo.lastname, amount)
         }
-    elseif not SenderPly and Config.BillingCommissions[society] then
+    elseif not SenderPly and config.billingCommissions[society] then
         invoiceMailData = {
             sender = 'Billing Department',
             subject = 'Bill Paid',
@@ -797,31 +798,17 @@ end)
 
 RegisterNetEvent('qb-phone:server:UpdateTweets', function(NewTweets, TweetData)
     local src = source
-    if Config.Linux then
-        MySQL.insert('INSERT INTO phone_tweets (citizenid, firstName, lastName, message, date, url, picture, tweetid) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', {
-            TweetData.citizenid,
-            TweetData.firstName,
-            TweetData.lastName,
-            TweetData.message,
-            TweetData.date,
-            TweetData.url:gsub("[%<>\"()\' $]",""),
-            TweetData.picture:gsub("[%<>\"()\' $]",""),
-            TweetData.tweetId
-        })
-        TriggerClientEvent('qb-phone:client:UpdateTweets', -1, src, NewTweets, TweetData, false)
-    else
-        MySQL.insert('INSERT INTO phone_tweets (citizenid, firstName, lastName, message, date, url, picture, tweetid) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', {
-            TweetData.citizenid,
-            TweetData.firstName,
-            TweetData.lastName,
-            TweetData.message,
-            TweetData.time,
-            TweetData.url:gsub("[%<>\"()\' $]",""),
-            TweetData.picture:gsub("[%<>\"()\' $]",""),
-            TweetData.tweetId
-        })
-        TriggerClientEvent('qb-phone:client:UpdateTweets', -1, src, NewTweets, TweetData, false)
-    end
+    MySQL.insert('INSERT INTO phone_tweets (citizenid, firstName, lastName, message, date, url, picture, tweetid) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', {
+        TweetData.citizenid,
+        TweetData.firstName,
+        TweetData.lastName,
+        TweetData.message,
+        TweetData.time,
+        TweetData.url:gsub("[%<>\"()\' $]",""),
+        TweetData.picture:gsub("[%<>\"()\' $]",""),
+        TweetData.tweetId
+    })
+    TriggerClientEvent('qb-phone:client:UpdateTweets', -1, src, NewTweets, TweetData, false)
 end)
 
 RegisterNetEvent('qb-phone:server:TransferMoney', function(iban, amount)

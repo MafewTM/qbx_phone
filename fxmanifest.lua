@@ -1,7 +1,7 @@
 fx_version 'cerulean'
 game 'gta5'
 
-description 'QB-Phone'
+description 'qbx_phone'
 version '1.0.0'
 
 ui_page 'html/index.html'
@@ -9,7 +9,6 @@ ui_page 'html/index.html'
 shared_scripts {
     '@ox_lib/init.lua',
     '@qbx_core/modules/utils.lua',
-    'config.lua',
 }
 
 client_scripts {
@@ -24,6 +23,7 @@ server_scripts {
 }
 
 files {
+    'config/client.lua',
     'html/*.html',
     'html/js/*.js',
     'html/img/*.png',
