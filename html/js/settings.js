@@ -1,9 +1,9 @@
 QB.Phone.Settings = {};
-QB.Phone.Settings.Background = "default-qbcore";
+QB.Phone.Settings.Background = "default";
 QB.Phone.Settings.OpenedTab = null;
 QB.Phone.Settings.Backgrounds = {
-    'default-qbcore': {
-        label: "Standard QBCore"
+    'default': {
+        label: "Standard"
     }
 };
 
@@ -58,7 +58,7 @@ QB.Phone.Functions.LoadMetaData = function(MetaData) {
     if (MetaData.background !== null && MetaData.background !== undefined) {
         QB.Phone.Settings.Background = MetaData.background;
     } else {
-        QB.Phone.Settings.Background = "default-qbcore";
+        QB.Phone.Settings.Background = "default";
     }
 
     var hasCustomBackground = QB.Phone.Functions.IsBackgroundCustom();
