@@ -7,7 +7,7 @@ local Hashtags = {}
 local Calls = {}
 local Adverts = {}
 local GeneratedPlates = {}
-local WebHook = ""
+local WebHook = ''
 local bannedCharacters = {'%','$',';'}
 local TWData = {}
 local VEHICLES = exports.qbx_core:GetVehiclesByName()
@@ -73,7 +73,7 @@ end
 
 local function splitStringToArray(string)
     local retval = {}
-    for i in string.gmatch(string, "%S+") do
+    for i in string.gmatch(string, '%S+') do
         retval[#retval+1] = i
     end
     return retval
@@ -81,39 +81,39 @@ end
 
 local function generateOwnerName()
     local names = {
-        [1] = { name = "Bailey Sykes",          citizenid = "DSH091G93" },
-        [2] = { name = "Aroush Goodwin",        citizenid = "AVH09M193" },
-        [3] = { name = "Tom Warren",            citizenid = "DVH091T93" },
-        [4] = { name = "Abdallah Friedman",     citizenid = "GZP091G93" },
-        [5] = { name = "Lavinia Powell",        citizenid = "DRH09Z193" },
-        [6] = { name = "Andrew Delarosa",       citizenid = "KGV091J93" },
-        [7] = { name = "Skye Cardenas",         citizenid = "ODF09S193" },
-        [8] = { name = "Amelia-Mae Walter",     citizenid = "KSD0919H3" },
-        [9] = { name = "Elisha Cote",           citizenid = "NDX091D93" },
-        [10] = { name = "Janice Rhodes",        citizenid = "ZAL0919X3" },
-        [11] = { name = "Justin Harris",        citizenid = "ZAK09D193" },
-        [12] = { name = "Montel Graves",        citizenid = "POL09F193" },
-        [13] = { name = "Benjamin Zavala",      citizenid = "TEW0J9193" },
-        [14] = { name = "Mia Willis",           citizenid = "YOO09H193" },
-        [15] = { name = "Jacques Schmitt",      citizenid = "QBC091H93" },
-        [16] = { name = "Mert Simmonds",        citizenid = "YDN091H93" },
-        [17] = { name = "Rickie Browne",        citizenid = "PJD09D193" },
-        [18] = { name = "Deacon Stanley",       citizenid = "RND091D93" },
-        [19] = { name = "Daisy Fraser",         citizenid = "QWE091A93" },
-        [20] = { name = "Kitty Walters",        citizenid = "KJH0919M3" },
-        [21] = { name = "Jareth Fernandez",     citizenid = "ZXC09D193" },
-        [22] = { name = "Meredith Calhoun",     citizenid = "XYZ0919C3" },
-        [23] = { name = "Teagan Mckay",         citizenid = "ZYX0919F3" },
-        [24] = { name = "Kurt Bain",            citizenid = "IOP091O93" },
-        [25] = { name = "Burt Kain",            citizenid = "PIO091R93" },
-        [26] = { name = "Joanna Huff",          citizenid = "LEK091X93" },
-        [27] = { name = "Carrie-Ann Pineda",    citizenid = "ALG091Y93" },
-        [28] = { name = "Gracie-Mai Mcghee",    citizenid = "YUR09E193" },
-        [29] = { name = "Robyn Boone",          citizenid = "SOM091W93" },
-        [30] = { name = "Aliya William",        citizenid = "KAS009193" },
-        [31] = { name = "Rohit West",           citizenid = "SOK091093" },
-        [32] = { name = "Skylar Archer",        citizenid = "LOK091093" },
-        [33] = { name = "Jake Kumar",           citizenid = "AKA420609" },
+        [1] = { name = 'Bailey Sykes',          citizenid = 'DSH091G93' },
+        [2] = { name = 'Aroush Goodwin',        citizenid = 'AVH09M193' },
+        [3] = { name = 'Tom Warren',            citizenid = 'DVH091T93' },
+        [4] = { name = 'Abdallah Friedman',     citizenid = 'GZP091G93' },
+        [5] = { name = 'Lavinia Powell',        citizenid = 'DRH09Z193' },
+        [6] = { name = 'Andrew Delarosa',       citizenid = 'KGV091J93' },
+        [7] = { name = 'Skye Cardenas',         citizenid = 'ODF09S193' },
+        [8] = { name = 'Amelia-Mae Walter',     citizenid = 'KSD0919H3' },
+        [9] = { name = 'Elisha Cote',           citizenid = 'NDX091D93' },
+        [10] = { name = 'Janice Rhodes',        citizenid = 'ZAL0919X3' },
+        [11] = { name = 'Justin Harris',        citizenid = 'ZAK09D193' },
+        [12] = { name = 'Montel Graves',        citizenid = 'POL09F193' },
+        [13] = { name = 'Benjamin Zavala',      citizenid = 'TEW0J9193' },
+        [14] = { name = 'Mia Willis',           citizenid = 'YOO09H193' },
+        [15] = { name = 'Jacques Schmitt',      citizenid = 'QBC091H93' },
+        [16] = { name = 'Mert Simmonds',        citizenid = 'YDN091H93' },
+        [17] = { name = 'Rickie Browne',        citizenid = 'PJD09D193' },
+        [18] = { name = 'Deacon Stanley',       citizenid = 'RND091D93' },
+        [19] = { name = 'Daisy Fraser',         citizenid = 'QWE091A93' },
+        [20] = { name = 'Kitty Walters',        citizenid = 'KJH0919M3' },
+        [21] = { name = 'Jareth Fernandez',     citizenid = 'ZXC09D193' },
+        [22] = { name = 'Meredith Calhoun',     citizenid = 'XYZ0919C3' },
+        [23] = { name = 'Teagan Mckay',         citizenid = 'ZYX0919F3' },
+        [24] = { name = 'Kurt Bain',            citizenid = 'IOP091O93' },
+        [25] = { name = 'Burt Kain',            citizenid = 'PIO091R93' },
+        [26] = { name = 'Joanna Huff',          citizenid = 'LEK091X93' },
+        [27] = { name = 'Carrie-Ann Pineda',    citizenid = 'ALG091Y93' },
+        [28] = { name = 'Gracie-Mai Mcghee',    citizenid = 'YUR09E193' },
+        [29] = { name = 'Robyn Boone',          citizenid = 'SOM091W93' },
+        [30] = { name = 'Aliya William',        citizenid = 'KAS009193' },
+        [31] = { name = 'Rohit West',           citizenid = 'SOK091093' },
+        [32] = { name = 'Skylar Archer',        citizenid = 'LOK091093' },
+        [33] = { name = 'Jake Kumar',           citizenid = 'AKA420609' },
     }
     return names[math.random(1, #names)]
 end
@@ -271,7 +271,7 @@ lib.callback.register('qb-phone:server:PayInvoice', function(source, society, am
             message = string.format('%s %s paid a bill of $%s', Ply.PlayerData.charinfo.firstname, Ply.PlayerData.charinfo.lastname, amount)
         }
     end
-    Ply.Functions.RemoveMoney('bank', amount, "paid-invoice")
+    Ply.Functions.RemoveMoney('bank', amount, 'paid-invoice')
     TriggerEvent('qb-phone:server:sendNewMailToOffline', sendercitizenid, invoiceMailData)
 	exports.qbx_management:AddMoney(society, amount)
     MySQL.query('DELETE FROM phone_invoices WHERE id = ?', {invoiceId})
@@ -303,7 +303,7 @@ lib.callback.register('qb-phone:server:GetContactPictures', function(Chats)
             if MetaData.phone.profilepicture ~= nil then
                 v.picture = MetaData.phone.profilepicture
             else
-                v.picture = "default"
+                v.picture = 'default'
             end
         end
     end
@@ -319,7 +319,7 @@ lib.callback.register('qb-phone:server:GetContactPicture', function(Chat)
     if MetaData.phone.profilepicture ~= nil then
         Chat.picture = MetaData.phone.profilepicture
     else
-        Chat.picture = "default"
+        Chat.picture = 'default'
     end
     SetTimeout(100, function()
         return Chat
@@ -330,7 +330,7 @@ lib.callback.register('qb-phone:server:GetPicture', function(number)
     local query = '%' .. number .. '%'
     local result = MySQL.query.await('SELECT * FROM players WHERE charinfo LIKE ?', {query})
     if result[1] ~= nil then
-        local Picture = "default"
+        local Picture = 'default'
         local MetaData = json.decode(result[1].metadata)
         if MetaData.phone.profilepicture ~= nil then
             Picture = MetaData.phone.profilepicture
@@ -405,7 +405,7 @@ lib.callback.register('qb-phone:server:GetVehicleSearchResults', function(search
                     searchData[#searchData+1] = {
                         plate = result[k].plate,
                         status = true,
-                        owner = charinfo.firstname .. " " .. charinfo.lastname,
+                        owner = charinfo.firstname .. ' ' .. charinfo.lastname,
                         citizenid = result[k].citizenid,
                         label = vehicleInfo.name
                     }
@@ -413,9 +413,9 @@ lib.callback.register('qb-phone:server:GetVehicleSearchResults', function(search
                     searchData[#searchData+1] = {
                         plate = result[k].plate,
                         status = true,
-                        owner = charinfo.firstname .. " " .. charinfo.lastname,
+                        owner = charinfo.firstname .. ' ' .. charinfo.lastname,
                         citizenid = result[k].citizenid,
-                        label = "Name not found.."
+                        label = 'Name not found..'
                     }
                 end
             end
@@ -427,7 +427,7 @@ lib.callback.register('qb-phone:server:GetVehicleSearchResults', function(search
                 status = GeneratedPlates[search].status,
                 owner = GeneratedPlates[search].owner,
                 citizenid = GeneratedPlates[search].citizenid,
-                label = "Brand unknown.."
+                label = 'Brand unknown..'
             }
         else
             local ownerInfo = generateOwnerName()
@@ -442,7 +442,7 @@ lib.callback.register('qb-phone:server:GetVehicleSearchResults', function(search
                 status = true,
                 owner = ownerInfo.name,
                 citizenid = ownerInfo.citizenid,
-                label = "Brand unknown.."
+                label = 'Brand unknown..'
             }
         end
     end
@@ -460,7 +460,7 @@ lib.callback.register('qb-phone:server:GetPicture', function(source, plate)
             vehicleData = {
                 plate = plate,
                 status = true,
-                owner = charinfo.firstname .. " " .. charinfo.lastname,
+                owner = charinfo.firstname .. ' ' .. charinfo.lastname,
                 citizenid = result[1].citizenid
             }
         elseif GeneratedPlates ~= nil and GeneratedPlates[plate] ~= nil then
@@ -490,7 +490,7 @@ end)
 lib.callback.register('qb-phone:server:HasPhone', function(source)
     local Player = exports.qbx_core:GetPlayer(source)
     if Player ~= nil then
-        local HasPhone = Player.Functions.GetItemByName("phone")
+        local HasPhone = Player.Functions.GetItemByName('phone')
         if HasPhone ~= nil then
             return true
         else
@@ -536,12 +536,12 @@ lib.callback.register('qb-phone:server:GetCurrentLawyers', function()
     for _, v in pairs(exports.qbx_core:GetQBPlayers()) do
         local Player = exports.qbx_core:GetPlayer(v)
         if Player ~= nil then
-            if (Player.PlayerData.job.name == "lawyer" or Player.PlayerData.job.name == "realestate" or
-                Player.PlayerData.job.name == "mechanic" or Player.PlayerData.job.name == "taxi" or
-                Player.PlayerData.job.name == "police" or Player.PlayerData.job.name == "ambulance") and
+            if (Player.PlayerData.job.name == 'lawyer' or Player.PlayerData.job.name == 'realestate' or
+                Player.PlayerData.job.name == 'mechanic' or Player.PlayerData.job.name == 'taxi' or
+                Player.PlayerData.job.name == 'police' or Player.PlayerData.job.name == 'ambulance') and
                 Player.PlayerData.job.onduty then
                 Lawyers[#Lawyers+1] = {
-                    name = Player.PlayerData.charinfo.firstname .. " " .. Player.PlayerData.charinfo.lastname,
+                    name = Player.PlayerData.charinfo.firstname .. ' ' .. Player.PlayerData.charinfo.lastname,
                     phone = Player.PlayerData.charinfo.phone,
                     typejob = Player.PlayerData.job.name
                 }
@@ -552,7 +552,7 @@ lib.callback.register('qb-phone:server:GetCurrentLawyers', function()
 end)
 
 lib.callback.register('qb-phone:server:GetWebhook', function()
-    if WebHook ~= "" then
+    if WebHook ~= '' then
 		return WebHook
 	else
 		print('Set your webhook to ensure that your camera will work!!!!!! Set this on line 10 of the server sided script!!!!!')
@@ -568,18 +568,18 @@ RegisterNetEvent('qb-phone:server:AddAdvert', function(msg, url)
     local CitizenId = Player.PlayerData.citizenid
     if Adverts[CitizenId] ~= nil then
         Adverts[CitizenId].message = msg
-        Adverts[CitizenId].name = "@" .. Player.PlayerData.charinfo.firstname .. "" .. Player.PlayerData.charinfo.lastname
+        Adverts[CitizenId].name = '@' .. Player.PlayerData.charinfo.firstname .. '' .. Player.PlayerData.charinfo.lastname
         Adverts[CitizenId].number = Player.PlayerData.charinfo.phone
         Adverts[CitizenId].url = url
     else
         Adverts[CitizenId] = {
             message = msg,
-            name = "@" .. Player.PlayerData.charinfo.firstname .. "" .. Player.PlayerData.charinfo.lastname,
+            name = '@' .. Player.PlayerData.charinfo.firstname .. '' .. Player.PlayerData.charinfo.lastname,
             number = Player.PlayerData.charinfo.phone,
             url = url
         }
     end
-    TriggerClientEvent('qb-phone:client:UpdateAdverts', -1, Adverts, "@" .. Player.PlayerData.charinfo.firstname .. "" .. Player.PlayerData.charinfo.lastname)
+    TriggerClientEvent('qb-phone:client:UpdateAdverts', -1, Adverts, '@' .. Player.PlayerData.charinfo.firstname .. '' .. Player.PlayerData.charinfo.lastname)
 end)
 
 RegisterNetEvent('qb-phone:server:DeleteAdvert', function()
@@ -716,7 +716,7 @@ RegisterNetEvent('qb-phone:server:MentionedPlayer', function(firstName, lastName
         local Player = exports.qbx_core:GetPlayer(v)
         if Player ~= nil then
             if (Player.PlayerData.charinfo.firstname == firstName and Player.PlayerData.charinfo.lastname == lastName) then
-                QBPhone.SetPhoneAlerts(Player.PlayerData.citizenid, "twitter")
+                QBPhone.SetPhoneAlerts(Player.PlayerData.citizenid, 'twitter')
                 QBPhone.AddMentionedTweet(Player.PlayerData.citizenid, TweetMessage)
                 TriggerClientEvent('qb-phone:client:GetMentioned', Player.PlayerData.source, TweetMessage, AppAlerts[Player.PlayerData.citizenid].twitter)
             else
@@ -725,7 +725,7 @@ RegisterNetEvent('qb-phone:server:MentionedPlayer', function(firstName, lastName
                 local result = MySQL.query.await('SELECT * FROM players WHERE charinfo LIKE ? AND charinfo LIKE ?', {query1, query2})
                 if result[1] ~= nil then
                     local MentionedTarget = result[1].citizenid
-                    QBPhone.SetPhoneAlerts(MentionedTarget, "twitter")
+                    QBPhone.SetPhoneAlerts(MentionedTarget, 'twitter')
                     QBPhone.AddMentionedTweet(MentionedTarget, TweetMessage)
                 end
             end
@@ -821,9 +821,9 @@ RegisterNetEvent('qb-phone:server:TransferMoney', function(iban, amount)
         local reciever = exports.qbx_core:GetPlayerByCitizenId(result[1].citizenid)
 
         if reciever ~= nil then
-            local PhoneItem = reciever.Functions.GetItemByName("phone")
-            reciever.Functions.AddMoney('bank', amount, "phone-transfered-from-" .. sender.PlayerData.citizenid)
-            sender.Functions.RemoveMoney('bank', amount, "phone-transfered-to-" .. reciever.PlayerData.citizenid)
+            local PhoneItem = reciever.Functions.GetItemByName('phone')
+            reciever.Functions.AddMoney('bank', amount, 'phone-transfered-from-' .. sender.PlayerData.citizenid)
+            sender.Functions.RemoveMoney('bank', amount, 'phone-transfered-to-' .. reciever.PlayerData.citizenid)
 
             if PhoneItem ~= nil then
                 TriggerClientEvent('qb-phone:client:TransferMoney', reciever.PlayerData.source, amount,
@@ -834,7 +834,7 @@ RegisterNetEvent('qb-phone:server:TransferMoney', function(iban, amount)
             moneyInfo.bank = math.round((moneyInfo.bank + amount))
             MySQL.update('UPDATE players SET money = ? WHERE citizenid = ?',
                 {json.encode(moneyInfo), result[1].citizenid})
-            sender.Functions.RemoveMoney('bank', amount, "phone-transfered")
+            sender.Functions.RemoveMoney('bank', amount, 'phone-transfered')
         end
     else
         TriggerClientEvent('ox_lib:notify', src, { description = 'This account number doesn\'t exist!', type = 'error'})
@@ -908,17 +908,17 @@ end)
 RegisterNetEvent('qb-phone:server:AddRecentCall', function(type, data)
     local src = source
     local Ply = exports.qbx_core:GetPlayer(src)
-    local Hour = os.date("%H")
-    local Minute = os.date("%M")
-    local label = Hour .. ":" .. Minute
+    local Hour = os.date('%H')
+    local Minute = os.date('%M')
+    local label = Hour .. ':' .. Minute
     TriggerClientEvent('qb-phone:client:AddRecentCall', src, data, label, type)
     local Trgt = exports.qbx_core:GetPlayerByPhone(data.number)
     if Trgt ~= nil then
         TriggerClientEvent('qb-phone:client:AddRecentCall', Trgt.PlayerData.source, {
-            name = Ply.PlayerData.charinfo.firstname .. " " .. Ply.PlayerData.charinfo.lastname,
+            name = Ply.PlayerData.charinfo.firstname .. ' ' .. Ply.PlayerData.charinfo.lastname,
             number = Ply.PlayerData.charinfo.phone,
             anonymous = data.anonymous
-        }, label, "outgoing")
+        }, label, 'outgoing')
     end
 end)
 
@@ -944,7 +944,7 @@ RegisterNetEvent('qb-phone:server:SaveMetaData', function(MData)
     MetaData.phone = MData
     MySQL.update('UPDATE players SET metadata = ? WHERE citizenid = ?',
         {json.encode(MetaData), Player.PlayerData.citizenid})
-    Player.Functions.SetMetaData("phone", MData)
+    Player.Functions.SetMetaData('phone', MData)
 end)
 
 RegisterNetEvent('qb-phone:server:GiveContactDetails', function(PlayerId)
@@ -976,7 +976,7 @@ RegisterNetEvent('qb-phone:server:InstallApplication', function(ApplicationData)
     local src = source
     local Player = exports.qbx_core:GetPlayer(src)
     Player.PlayerData.metadata.phonedata.InstalledApps[ApplicationData.app] = ApplicationData
-    Player.Functions.SetMetaData("phonedata", Player.PlayerData.metadata.phonedata)
+    Player.Functions.SetMetaData('phonedata', Player.PlayerData.metadata.phonedata)
 
     -- TriggerClientEvent('qb-phone:RefreshPhone', src)
 end)
@@ -985,7 +985,7 @@ RegisterNetEvent('qb-phone:server:RemoveInstallation', function(App)
     local src = source
     local Player = exports.qbx_core:GetPlayer(src)
     Player.PlayerData.metadata.phonedata.InstalledApps[App] = nil
-    Player.Functions.SetMetaData("phonedata", Player.PlayerData.metadata.phonedata)
+    Player.Functions.SetMetaData('phonedata', Player.PlayerData.metadata.phonedata)
 
     -- TriggerClientEvent('qb-phone:RefreshPhone', src)
 end)
@@ -1022,11 +1022,11 @@ end)
 lib.addCommand('setmetadata', {help = 'Set Player Metadata (God Only)', restricted = 'god'}, function(source, args)
     local Player = exports.qbx_core:GetPlayer(source)
     if args[1] then
-        if args[1] == "trucker" then
+        if args[1] == 'trucker' then
             if args[2] then
                 local newrep = Player.PlayerData.metadata.jobrep
                 newrep.trucker = tonumber(args[2])
-                Player.Functions.SetMetaData("jobrep", newrep)
+                Player.Functions.SetMetaData('jobrep', newrep)
             end
         end
     end
@@ -1035,7 +1035,7 @@ end)
 lib.addCommand('bill', {help = 'Bill A Player', params = {{name = 'id', type = 'playerId', help = 'Player\'s Server ID'},{name = 'amount', type = 'number', help = 'Fine Amount'}}}, function(source, args)
     local biller = exports.qbx_core:GetPlayer(source)
     local billed = exports.qbx_core:GetPlayer(args.id)
-    if biller.PlayerData.job.name == "police" or biller.PlayerData.job.name == 'ambulance' or biller.PlayerData.job.name == 'mechanic' then
+    if biller.PlayerData.job.name == 'police' or biller.PlayerData.job.name == 'ambulance' or biller.PlayerData.job.name == 'mechanic' then
         if billed ~= nil then
             if biller.PlayerData.citizenid ~= billed.PlayerData.citizenid then
                 if args.amount and args.amount > 0 then
