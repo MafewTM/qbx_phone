@@ -4,7 +4,7 @@
     display: none;
     height: 100%;
     width: 100%;
-    background: rgb(36, 36, 36);
+    background: #252528;
     overflow: hidden;
 }
 
@@ -14,8 +14,8 @@
     font-size: 2.5vh;
     top: 5vh;
     color: white;
-    height: 20vh;
     text-align: center;
+    background-color: #212124;
 }
 
 #total-contacts {
@@ -28,16 +28,19 @@
 
 .phone-app-footer {
     position: absolute;
-    height: 5vh;
+    display: flex;
+    font-size: 1.2vh;
+    height: 8vh;
     width: 100%;
-    bottom: 30px;
+    bottom: 0vh;
     z-index: 101;
+    background-color: #212124
 }
 
 .phone-app-footer-button {
     position: relative;
     height: 100%;
-    width: 25%;
+    flex-grow: 1;
     text-align: center;
     float: left;
     font-family: 'Poppins', sans-serif;
@@ -45,16 +48,23 @@
     transition: .1s;
 }
 
+.phone-app-footer-button span {
+    position: inherit;
+    top: 1vh;
+    text-transform: uppercase;
+}
+
 .phone-selected-footer-tab {
-    color: #dc143c;
+    border-bottom: 0.2vh solid #1DA1F2;
+    color: #1DA1F2;
 }
 
 .phone-contacts {
     display: block;
     position: absolute;
-    height: 60%;
+    height: 92%;
     width: 100%;
-    top: 10vh;
+    top: 4vh;
 }
 
 .phone-keypad-header {
@@ -291,9 +301,9 @@
 
 .phone-contact-list {
     position: absolute;
-    height: 100%;
+    height: 81%;
     top: 4.5vh;
-    width: 99%;
+    width: 100%;
     margin: 0 auto;
     left: 0;
     right: 0;
@@ -303,36 +313,42 @@
 
 .phone-contact {
     position: relative;
-    width: 90%;
+    width: 100%;
     color: white;
-    left: 15px;
-    height: 4.5vh;
-    margin-top: 2px;
-    margin-bottom: 10px;
-    background-color: rgba(23, 23, 23, 90%);
-    border-radius: 0.15rem;
-    box-shadow: 0rem 0rem 0.1rem 0.05rem #000000;
+    height: 5.2vh;
+    border-bottom: 1px solid #1C1C1C;
 }
 
 .phone-contact-firstletter {
     position: absolute;
-    height: 3.4vh;
-    width: 3.4vh;
-    margin: .5vh;
-    margin-left: .6vh;
+    height: 3.2vh;
+    width: 3.2vh;
+    margin: 1vh;
+    left: 0.8vh;
     text-align: center;
-    line-height: 3.5vh;
+    line-height: 3vh;
     border-radius: 50%;
+    border: 1px solid #bfbfbf;
     font-family: 'Poppins', sans-serif;
     color: white;
 }
 
 .phone-contact-name {
     position: absolute;
-    left: 5vh;
-    line-height: 4.5vh;
+    left: 6vh;
+    bottom: 0.9vh;
+    line-height: 5.2vh;
     font-family: 'Poppins', sans-serif;
-    font-size: 1.4vh;
+    font-size: 1.3vh;
+}
+
+.phone-contact-number {
+    position: absolute;
+    left: 6vh;
+    top: 0.9vh;
+    line-height: 5.2vh;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.2vh;
 }
 
 .phone-contact-actions {
