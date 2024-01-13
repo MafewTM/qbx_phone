@@ -208,9 +208,9 @@ QB.Phone.Functions.LoadContacts = function(myContacts) {
                 ALLOWED_ATTR: []
             });
             if (contact.name == '') contact.name = 'Hmm, I shouldn\'t be able to do this...'
-            var ContactElement = '<div class="phone-contact" data-contactid="'+i+'"><div class="phone-contact-firstletter" style="background-color: #e74c3c;">'+((contact.name).charAt(0)).toUpperCase()+'</div><div class="phone-contact-name">'+contact.name+'</div><div class="phone-contact-number">'+contact.number+'</div><div class="phone-contact-actions"><i class="fas fa-sort-down"></i></div><div class="phone-contact-action-buttons"> <i class="fas fa-phone-volume" id="phone-start-call"></i> <i class="fab fa-whatsapp" id="new-chat-phone" style="font-size: 2.5vh;"></i> <i class="fas fa-user-edit" id="edit-contact"></i> </div></div>'
+            var ContactElement = '<div class="phone-contact" data-contactid="'+i+'"><div class="phone-contact-firstletter" style="background-color: #e74c3c;">'+((contact.name).charAt(0)).toUpperCase()+'</div><div class="phone-contact-name">'+contact.name+'</div><div class="phone-contact-number">'+contact.number+'</div><div class="phone-contact-actions"><i class="fas fa-angle-down"></i></div><div class="phone-contact-action-buttons"> <i class="fas fa-phone-volume" id="phone-start-call"></i> <i class="fas fa-comment" id="new-chat-phone" style="font-size: 2.5vh;"></i> <i class="fas fa-user-edit" id="edit-contact"></i> </div></div>'
             if (contact.status) {
-                ContactElement = '<div class="phone-contact" data-contactid="'+i+'"><div class="phone-contact-firstletter" style="background-color: #2ecc71;">'+((contact.name).charAt(0)).toUpperCase()+'</div><div class="phone-contact-name">'+contact.name+'</div><div class="phone-contact-number">'+contact.number+'</div><div class="phone-contact-actions"><i class="fas fa-sort-down"></i></div><div class="phone-contact-action-buttons"> <i class="fas fa-phone-volume" id="phone-start-call"></i> <i class="fab fa-whatsapp" id="new-chat-phone" style="font-size: 2.5vh;"></i> <i class="fas fa-user-edit" id="edit-contact"></i> </div></div>'
+                ContactElement = '<div class="phone-contact" data-contactid="'+i+'"><div class="phone-contact-firstletter" style="background-color: #2ecc71;">'+((contact.name).charAt(0)).toUpperCase()+'</div><div class="phone-contact-name">'+contact.name+'</div><div class="phone-contact-number">'+contact.number+'</div><div class="phone-contact-actions"><i class="fas fa-angle-down"></i></div><div class="phone-contact-action-buttons"> <i class="fas fa-phone-volume" id="phone-start-call"></i> <i class="fas fa-comment" id="new-chat-phone" style="font-size: 2.5vh;"></i> <i class="fas fa-user-edit" id="edit-contact"></i> </div></div>'
             }
             TotalContacts = TotalContacts + 1
             $(ContactsObject).append(ContactElement);
@@ -227,8 +227,8 @@ $(document).on('click', '#new-chat-phone', function(e){
     var ContactData = $("[data-contactid='"+ContactId+"']").data('contactData');
 
     if (ContactData.number !== QB.Phone.Data.PlayerData.charinfo.phone) {
-        $.post('https://qbx_phone/GetWhatsappChats', JSON.stringify({}), function(chats){
-            QB.Phone.Functions.LoadWhatsappChats(chats);
+        $.post('https://qbx_phone/GetMessagesChats', JSON.stringify({}), function(chats){
+            QB.Phone.Functions.LoadMessagesChats(chats);
         });
 
         $('.phone-application-container').animate({
@@ -241,25 +241,25 @@ $(document).on('click', '#new-chat-phone', function(e){
             });
 
             QB.Phone.Functions.ToggleApp("phone", "none");
-            QB.Phone.Functions.ToggleApp("whatsapp", "block");
-            QB.Phone.Data.currentApplication = "whatsapp";
+            QB.Phone.Functions.ToggleApp("messages", "block");
+            QB.Phone.Data.currentApplication = "messages";
 
-            $.post('https://qbx_phone/GetWhatsappChat', JSON.stringify({phone: ContactData.number}), function(chat){
+            $.post('https://qbx_phone/GetMessagesChat', JSON.stringify({phone: ContactData.number}), function(chat){
                 QB.Phone.Functions.SetupChatMessages(chat, {
                     name: ContactData.name,
                     number: ContactData.number
                 });
             });
 
-            $('.whatsapp-openedchat-messages').animate({scrollTop: 9999}, 150);
-            $(".whatsapp-openedchat").css({"display":"block"});
-            $(".whatsapp-openedchat").css({left: 0+"vh"});
-            $(".whatsapp-chats").animate({left: 30+"vh"},100, function(){
-                $(".whatsapp-chats").css({"display":"none"});
+            $('.messages-openedchat-messages').animate({scrollTop: 9999}, 150);
+            $(".messages-openedchat").css({"display":"block"});
+            $(".messages-openedchat").css({left: 0+"vh"});
+            $(".messages-chats").animate({left: 30+"vh"},100, function(){
+                $(".messages-chats").css({"display":"none"});
             });
         }, 400)
     } else {
-        QB.Phone.Notifications.Add("fa fa-phone-alt", "Phone", "You can't whatsapp yourself..", "default", 3500);
+        QB.Phone.Notifications.Add("fa fa-phone-alt", "Phone", "You can't messages yourself..", "default", 3500);
     }
 });
 

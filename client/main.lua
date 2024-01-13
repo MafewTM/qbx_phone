@@ -533,7 +533,7 @@ RegisterNUICallback('GetMails', function(_, cb)
     cb(PhoneData.Mails)
 end)
 
-RegisterNUICallback('GetWhatsappChat', function(data, cb)
+RegisterNUICallback('GetMessagesChat', function(data, cb)
     if PhoneData.Chats[data.phone] ~= nil then
         cb(PhoneData.Chats[data.phone])
     else
@@ -566,9 +566,9 @@ RegisterNUICallback('SharedLocation', function(data, cb)
     SendNUIMessage({
         action = 'PhoneNotification',
         PhoneNotify = {
-            title = 'Whatsapp',
+            title = 'Messages',
             text = 'Location has been set!',
-            icon = 'fab fa-whatsapp',
+            icon = 'fab fa-comment',
             color = '#25D366',
             timeout = 1500,
         },
@@ -599,14 +599,14 @@ RegisterNUICallback('ClearAlerts', function(data, cb)
     local ChatKey = getKeyByNumber(chat)
 
     if PhoneData.Chats[ChatKey].Unread ~= nil then
-        local newAlerts = (config.phoneApps.whatsapp.Alerts - PhoneData.Chats[ChatKey].Unread)
+        local newAlerts = (config.phoneApps.messages.Alerts - PhoneData.Chats[ChatKey].Unread)
         config.phoneApps.whataspp.Alerts = newAlerts
-        TriggerServerEvent('qb-phone:server:SetPhoneAlerts', 'whatsapp', newAlerts)
+        TriggerServerEvent('qb-phone:server:SetPhoneAlerts', 'messages', newAlerts)
 
         PhoneData.Chats[ChatKey].Unread = 0
 
         SendNUIMessage({
-            action = 'RefreshWhatsappAlerts',
+            action = 'RefreshMessagesAlerts',
             Chats = PhoneData.Chats,
         })
         SendNUIMessage({ action = 'RefreshAppAlerts', AppData = config.phoneApps })
@@ -1157,7 +1157,7 @@ RegisterNUICallback('CanTransferMoney', function(data, cb)
     end
 end)
 
-RegisterNUICallback('GetWhatsappChats', function(_, cb)
+RegisterNUICallback('GetMessagesChats', function(_, cb)
     local Chats = lib.callback.await('qb-phone:server:GetContactPictures', false, PhoneData.Chats)
     cb(Chats)
 end)
@@ -1757,9 +1757,9 @@ RegisterNetEvent('qb-phone:client:UpdateMessages', function(ChatMessages, Sender
                 SendNUIMessage({
                     action = 'PhoneNotification',
                     PhoneNotify = {
-                        title = 'Whatsapp',
+                        title = 'Messages',
                         text = 'New message from ' .. isNumberInContacts(SenderNumber) .. '!',
-                        icon = 'fab fa-whatsapp',
+                        icon = 'fab fa-comment',
                         color = '#25D366',
                         timeout = 1500,
                     },
@@ -1768,9 +1768,9 @@ RegisterNetEvent('qb-phone:client:UpdateMessages', function(ChatMessages, Sender
                 SendNUIMessage({
                     action = 'PhoneNotification',
                     PhoneNotify = {
-                        title = 'Whatsapp',
+                        title = 'Messages',
                         text = 'Messaged yourself',
-                        icon = 'fab fa-whatsapp',
+                        icon = 'fab fa-comment',
                         color = '#25D366',
                         timeout = 4000,
                     },
@@ -1792,15 +1792,15 @@ RegisterNetEvent('qb-phone:client:UpdateMessages', function(ChatMessages, Sender
             SendNUIMessage({
                 action = 'PhoneNotification',
                 PhoneNotify = {
-                    title = 'Whatsapp',
+                    title = 'messages',
                     text = 'New message from ' .. isNumberInContacts(SenderNumber) .. '!',
-                    icon = 'fab fa-whatsapp',
+                    icon = 'fab fa-comment',
                     color = '#25D366',
                     timeout = 3500,
                 },
             })
-            config.phoneApps.whatsapp.Alerts = config.phoneApps.whatsapp.Alerts + 1
-            TriggerServerEvent('qb-phone:server:SetPhoneAlerts', 'whatsapp')
+            config.phoneApps.messages.Alerts = config.phoneApps.messages.Alerts + 1
+            TriggerServerEvent('qb-phone:server:SetPhoneAlerts', 'messages')
         end
     else
         PhoneData.Chats[NumberKey].messages = ChatMessages
@@ -1816,9 +1816,9 @@ RegisterNetEvent('qb-phone:client:UpdateMessages', function(ChatMessages, Sender
                 SendNUIMessage({
                     action = 'PhoneNotification',
                     PhoneNotify = {
-                        title = 'Whatsapp',
+                        title = 'Messages',
                         text = 'New message from ' .. isNumberInContacts(SenderNumber) .. '!',
-                        icon = 'fab fa-whatsapp',
+                        icon = 'fab fa-comment',
                         color = '#25D366',
                         timeout = 1500,
                     },
@@ -1827,9 +1827,9 @@ RegisterNetEvent('qb-phone:client:UpdateMessages', function(ChatMessages, Sender
                 SendNUIMessage({
                     action = 'PhoneNotification',
                     PhoneNotify = {
-                        title = 'Whatsapp',
+                        title = 'Messages',
                         text = 'Messaged yourself',
-                        icon = 'fab fa-whatsapp',
+                        icon = 'fab fa-comment',
                         color = '#25D366',
                         timeout = 4000,
                     },
@@ -1851,9 +1851,9 @@ RegisterNetEvent('qb-phone:client:UpdateMessages', function(ChatMessages, Sender
             SendNUIMessage({
                 action = 'PhoneNotification',
                 PhoneNotify = {
-                    title = 'Whatsapp',
+                    title = 'Messages',
                     text = 'New message from ' .. isNumberInContacts(SenderNumber) .. '!',
-                    icon = 'fab fa-whatsapp',
+                    icon = 'fab fa-comment',
                     color = '#25D366',
                     timeout = 3500,
                 },
@@ -1862,8 +1862,8 @@ RegisterNetEvent('qb-phone:client:UpdateMessages', function(ChatMessages, Sender
             NumberKey = getKeyByNumber(SenderNumber)
             reorganizeChats(NumberKey)
 
-            config.phoneApps.whatsapp.Alerts = config.phoneApps.whatsapp.Alerts + 1
-            TriggerServerEvent('qb-phone:server:SetPhoneAlerts', 'whatsapp')
+            config.phoneApps.messages.Alerts = config.phoneApps.messages.Alerts + 1
+            TriggerServerEvent('qb-phone:server:SetPhoneAlerts', 'messages')
         end
     end
 end)

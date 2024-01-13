@@ -16,8 +16,8 @@ return {
             slot = 1,
             Alerts = 0,
         },
-        whatsapp = {
-            app = 'whatsapp',
+        messages = {
+            app = 'messages',
             color = '#25d366',
             icon = 'fas fa-comment',
             tooltipText = 'Messages',

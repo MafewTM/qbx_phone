@@ -143,9 +143,9 @@ $(document).on('click', '.phone-application', function(e){
                     $.post('https://qbx_phone/GetInvoices', JSON.stringify({}), function(invoices){
                         QB.Phone.Functions.LoadBankInvoices(invoices);
                     });
-                } else if (PressedApplication == "whatsapp") {
-                    $.post('https://qbx_phone/GetWhatsappChats', JSON.stringify({}), function(chats){
-                        QB.Phone.Functions.LoadWhatsappChats(chats);
+                } else if (PressedApplication == "messages") {
+                    $.post('https://qbx_phone/GetMessagesChats', JSON.stringify({}), function(chats){
+                        QB.Phone.Functions.LoadMessagesChats(chats);
                     });
                 } else if (PressedApplication == "phone") {
                     $.post('https://qbx_phone/GetMissedCalls', JSON.stringify({}), function(recent){
@@ -262,17 +262,17 @@ $(document).on('click', '.phone-home-container', function(event){
         }, 400)
         QB.Phone.Functions.HeaderTextColor("white", 300);
 
-        if (QB.Phone.Data.currentApplication == "whatsapp") {
+        if (QB.Phone.Data.currentApplication == "messages") {
             if (OpenedChatData.number !== null) {
                 setTimeout(function(){
-                    $(".whatsapp-chats").css({"display":"block"});
-                    $(".whatsapp-chats").animate({
+                    $(".messages-chats").css({"display":"block"});
+                    $(".messages-chats").animate({
                         left: 0+"vh"
                     }, 1);
-                    $(".whatsapp-openedchat").animate({
+                    $(".messages-openedchat").animate({
                         left: -30+"vh"
                     }, 1, function(){
-                        $(".whatsapp-openedchat").css({"display":"none"});
+                        $(".messages-openedchat").css({"display":"none"});
                     });
                     OpenedChatPicture = null;
                     OpenedChatData.number = null;
@@ -319,23 +319,23 @@ QB.Phone.Functions.ToggleApp = function(app, show) {
 
 QB.Phone.Functions.Close = function() {
 
-    if (QB.Phone.Data.currentApplication == "whatsapp") {
+    if (QB.Phone.Data.currentApplication == "messages") {
         setTimeout(function(){
             QB.Phone.Animations.TopSlideUp('.phone-application-container', 400, -160);
             QB.Phone.Animations.TopSlideUp('.'+QB.Phone.Data.currentApplication+"-app", 400, -160);
-            $(".whatsapp-app").css({"display":"none"});
+            $(".messages-app").css({"display":"none"});
             QB.Phone.Functions.HeaderTextColor("white", 300);
 
             if (OpenedChatData.number !== null) {
                 setTimeout(function(){
-                    $(".whatsapp-chats").css({"display":"block"});
-                    $(".whatsapp-chats").animate({
+                    $(".messages-chats").css({"display":"block"});
+                    $(".messages-chats").animate({
                         left: 0+"vh"
                     }, 1);
-                    $(".whatsapp-openedchat").animate({
+                    $(".messages-openedchat").animate({
                         left: -30+"vh"
                     }, 1, function(){
-                        $(".whatsapp-openedchat").css({"display":"none"});
+                        $(".messages-openedchat").css({"display":"none"});
                     });
                     OpenedChatData.number = null;
                 }, 450);
@@ -571,19 +571,19 @@ $(document).ready(function(){
                 $(".bank-app-account-balance").data('balance', event.data.NewBalance);
                 break;
             case "UpdateChat":
-                if (QB.Phone.Data.currentApplication == "whatsapp") {
+                if (QB.Phone.Data.currentApplication == "messages") {
                     if (OpenedChatData.number !== null && OpenedChatData.number == event.data.chatNumber) {
                         QB.Phone.Functions.SetupChatMessages(event.data.chatData);
                     } else {
-                        QB.Phone.Functions.LoadWhatsappChats(event.data.Chats);
+                        QB.Phone.Functions.LoadMessagesChats(event.data.Chats);
                     }
                 }
                 break;
             case "UpdateHashtags":
                 QB.Phone.Notifications.LoadHashtags(event.data.Hashtags);
                 break;
-            case "RefreshWhatsappAlerts":
-                QB.Phone.Functions.ReloadWhatsappAlerts(event.data.Chats);
+            case "RefreshMessagesAlerts":
+                QB.Phone.Functions.ReloadMessagesAlerts(event.data.Chats);
                 break;
             case "CancelOutgoingCall":
                 $.post('https://qbx_phone/HasPhone', JSON.stringify({}), function(HasPhone){
