@@ -1,7 +1,6 @@
 local config = require 'config.client'
 --local apartmentConfig = require '@qbx_apartments.config.shared'
 local VEHICLES = exports.qbx_core:GetVehiclesByName()
-local PlayerJob = {}
 local patt = '[?!@#]'
 local frontCam = false
 PhoneData = {
@@ -66,14 +65,15 @@ local function calculateTimeToDisplay()
     return obj
 end
 
-local function getKeyByDate(Number, Date)
+local function getKeyByDate(number, date)
     local retval = nil
-    if PhoneData.Chats[Number] ~= nil then
-        if PhoneData.Chats[Number].messages ~= nil then
-            for key, chat in pairs(PhoneData.Chats[Number].messages) do
-                if chat.date == Date then
+    if PhoneData.Chats[number] ~= nil then
+        if PhoneData.Chats[number].messages ~= nil then
+            local foundKey = false
+            for key, chat in pairs(PhoneData.Chats[number].messages) do
+                if chat.date == date and not foundKey then
                     retval = key
-                    break
+                    foundKey = true
                 end
             end
         end
@@ -81,11 +81,11 @@ local function getKeyByDate(Number, Date)
     return retval
 end
 
-local function getKeyByNumber(Number)
+local function getKeyByNumber(number)
     local retval = nil
     if PhoneData.Chats then
         for k, v in pairs(PhoneData.Chats) do
-            if v.number == tostring(Number) then
+            if v.number == tostring(number) then
                 retval = k
             end
         end
@@ -119,24 +119,11 @@ local function findVehFromPlateAndLocate(plate)
 end
 
 local function disableDisplayControlActions()
-    DisableControlAction(0, 1, true) -- disable mouse look
-    DisableControlAction(0, 2, true) -- disable mouse look
-    DisableControlAction(0, 3, true) -- disable mouse look
-    DisableControlAction(0, 4, true) -- disable mouse look
-    DisableControlAction(0, 5, true) -- disable mouse look
-    DisableControlAction(0, 6, true) -- disable mouse look
-    DisableControlAction(0, 263, true) -- disable melee
-    DisableControlAction(0, 264, true) -- disable melee
-    DisableControlAction(0, 257, true) -- disable melee
-    DisableControlAction(0, 140, true) -- disable melee
-    DisableControlAction(0, 141, true) -- disable melee
-    DisableControlAction(0, 142, true) -- disable melee
-    DisableControlAction(0, 143, true) -- disable melee
-    DisableControlAction(0, 177, true) -- disable escape
-    DisableControlAction(0, 200, true) -- disable escape
-    DisableControlAction(0, 202, true) -- disable escape
-    DisableControlAction(0, 322, true) -- disable escape
-    DisableControlAction(0, 245, true) -- disable chat
+    local controlActions = {1, 2, 3, 4, 5, 6, 263, 264, 257, 140, 141, 142, 143, 177, 200, 202, 322, 245}
+
+    for _, controlAction in ipairs(controlActions) do
+        DisableControlAction(0, controlAction, true)
+    end
 end
 
 local function loadPhone()
@@ -144,7 +131,6 @@ local function loadPhone()
 
     local pData = lib.callback.await('qb-phone:server:GetPhoneData', false)
 
-    PlayerJob = QBX.PlayerData.job
     PhoneData.PlayerData = QBX.PlayerData
     local PhoneMeta = PhoneData.PlayerData.metadata.phone
     PhoneData.MetaData = PhoneMeta
@@ -278,8 +264,7 @@ local function openPhone()
 end
 
 local function generateCallId(caller, target)
-    local CallId = math.ceil(((tonumber(caller) + tonumber(target)) / 100 * 1))
-    return CallId
+    return (tonumber(caller) + tonumber(target)) // 100
 end
 
 local function cancelCall()
@@ -345,8 +330,7 @@ local function callContact(CallData, AnonymousCall)
     PhoneData.CallData.AnsweredCall = false
     PhoneData.CallData.CallId = generateCallId(PhoneData.PlayerData.charinfo.phone, CallData.number)
 
-    TriggerServerEvent('qb-phone:server:callContact', PhoneData.CallData.TargetData, PhoneData.CallData.CallId,
-        AnonymousCall)
+    TriggerServerEvent('qb-phone:server:callContact', PhoneData.CallData.TargetData, PhoneData.CallData.CallId, AnonymousCall)
     TriggerServerEvent('qb-phone:server:SetCallState', true)
 
     for _ = 1, config.callRepeats + 1, 1 do
@@ -1433,8 +1417,6 @@ RegisterNetEvent('QBCore:Client:OnJobUpdate', function(JobInfo)
         JobData = JobInfo,
         applications = config.phoneApps
     })
-
-    PlayerJob = JobInfo
 end)
 
 -- Events
@@ -2021,8 +2003,7 @@ RegisterNetEvent('qb-phone:client:answerCall', function()
 end)
 
 RegisterNetEvent('qb-phone:client:addPoliceAlert', function(alertData)
-    PlayerJob = QBX.PlayerData.job
-    if PlayerJob.type == 'leo' and PlayerJob.onduty then
+    if QBX.PlayerData.job.type == 'leo' and QBX.PlayerData.job.onduty then
         SendNUIMessage({
             action = 'AddPoliceAlert',
             alert = alertData,
