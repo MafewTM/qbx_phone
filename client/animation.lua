@@ -3,9 +3,9 @@ local phoneModel = `prop_npc_phone_02`
 
 local function checkAnimLoop()
     CreateThread(function()
-        while PhoneData.AnimationData.lib ~= nil and PhoneData.AnimationData.anim ~= nil do
+        while PhoneData.AnimationData.lib and PhoneData.AnimationData.anim do
             if not IsEntityPlayingAnim(cache.ped, PhoneData.AnimationData.lib, PhoneData.AnimationData.anim, 3) then
-                lib.requestAnimDict(PhoneData.AnimationData.lib)
+                lib.requestAnimDict(PhoneData.AnimationData.lib, 5000)
                 TaskPlayAnim(cache.ped, PhoneData.AnimationData.lib, PhoneData.AnimationData.anim, 3.0, 3.0, -1, 50, 0, false, false, false)
             end
             Wait(500)
@@ -13,20 +13,20 @@ local function checkAnimLoop()
     end)
 end
 
-function newPhoneProp()
-	deletePhone()
-	lib.requestModel(phoneModel)
+function NewPhoneProp()
+	DeletePhone()
+	lib.requestModel(phoneModel, 5000)
 	phoneProp = CreateObject(phoneModel, 1.0, 1.0, 1.0, true, true, false)
 
 	local bone = GetPedBoneIndex(cache.ped, 28422)
 	if phoneModel == `prop_cs_phone_01` then
-		AttachEntityToEntity(phoneProp, cache.ped, bone, 0.0, 0.0, 0.0, 50.0, 320.0, 50.0, 1, 1, 0, 0, 2, 1)
+		AttachEntityToEntity(phoneProp, cache.ped, bone, 0.0, 0.0, 0.0, 50.0, 320.0, 50.0, true, true, false, false, 2, true)
 	else
-		AttachEntityToEntity(phoneProp, cache.ped, bone, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1, 1, 0, 0, 2, 1)
+		AttachEntityToEntity(phoneProp, cache.ped, bone, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, true, true, false, false, 2, true)
 	end
 end
 
-function deletePhone()
+function DeletePhone()
 	if phoneProp ~= 0 then
 		DeleteObject(phoneProp)
 		phoneProp = 0
@@ -34,14 +34,14 @@ function deletePhone()
 end
 
 function DoPhoneAnimation(anim)
-    local AnimationLib = 'cellphone@'
-    local AnimationStatus = anim
+    local animationLib = 'cellphone@'
+    local animationStatus = anim
     if IsPedInAnyVehicle(cache.ped, false) then
-        AnimationLib = 'anim@cellphone@in_car@ps'
+        animationLib = 'anim@cellphone@in_car@ps'
     end
-    lib.requestAnimDict(AnimationLib)
-    TaskPlayAnim(cache.ped, AnimationLib, AnimationStatus, 3.0, 3.0, -1, 50, 0, false, false, false)
-    PhoneData.AnimationData.lib = AnimationLib
-    PhoneData.AnimationData.anim = AnimationStatus
+    lib.requestAnimDict(animationLib, 5000)
+    TaskPlayAnim(cache.ped, animationLib, animationStatus, 3.0, 3.0, -1, 50, 0, false, false, false)
+    PhoneData.AnimationData.lib = animationLib
+    PhoneData.AnimationData.anim = animationStatus
     checkAnimLoop()
 end
