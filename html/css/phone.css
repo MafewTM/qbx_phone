@@ -15,7 +15,7 @@
     height: 10%;
     color: white;
     text-align: center;
-    background-color: #212124;
+    background-color: ##252528;
 }
 
 #total-contacts {
@@ -39,7 +39,8 @@
 
 .phone-app-footer-button {
     position: relative;
-    height: 100%;
+    height: 44%;
+    width: 33.333333%;
     flex-grow: 1;
     text-align: center;
     float: left;
@@ -67,6 +68,10 @@
     top: 4vh;
 }
 
+.phone-contact:hover {
+    background-color: #212124;
+}
+
 .phone-keypad-header {
     padding-top: 6vh;
     padding-left: 3vh;
@@ -82,11 +87,11 @@
     top: 11vh;
     height: 4vh;
     width: 19vh;
-    border-radius: 1vh;
-    border: none;
-    background: rgba(23, 23, 23, 90%);
+    border-radius: 0.2vh;
+    background: #212124;
     outline: none;
-    box-shadow: 0rem 0rem 0.1rem 0.05rem #000000;
+    border: 1px solid #1c1c1e;
+    box-shadow: 0 0 0.2vh 0 rgb(0 0 0 / 28%);
     text-indent: 1vh;
     font-family: 'Poppins', sans-serif;
     text-align: left;
@@ -102,7 +107,6 @@
     height: 100%;
     width: 100%;
     top: 0;
-    background: rgb(36, 36, 36);
 }
 
 .phone-recent {
@@ -111,7 +115,6 @@
     height: 100%;
     width: 100%;
     top: 0;
-    background: rgb(36, 36, 36);
 }
 
 .phone-recent-header {
@@ -206,7 +209,8 @@
     height: 5.5vh;
     width: 5.5vh;
     text-align: center;
-    line-height: 5.8vh;
+    line-height: 5.4vh;
+    box-shadow: inset 0px 0px 10px 0px rgb(0 0 0 / 13%);
     background-color: #27ae60;
     color: white;
     border-radius: 50%;
@@ -227,13 +231,12 @@
     font-family: 'Poppins', sans-serif;
     font-size: 2vh;
     color: white;
-    border-bottom: 2px solid rgba(0, 0, 0, 0);
     transition: .1s;
 }
 
 .phone-keypad-key:hover {
-    color: #6e6e6e;
-    border-bottom: 2px solid #e74c3c;
+    border-bottom: 0.2vh solid #1DA1F2;
+    color: #1DA1F2;
 }
 
 .phone-contacts-header {
@@ -244,11 +247,8 @@
 }
 
 .phone-contacts-header > i {
-    float: right;
     line-height: 4vh;
     font-size: 1.8vh;
-    padding-right: 2vh;
-    margin-left: 0.2vh;
     transition: .1s;
     color: white;
     z-index: 150;
@@ -258,30 +258,32 @@
     color: #dc143c;
 }
 
-/* #phone-search-icon {
-    position: relative;
+#phone-suggested-icon {
+    float: left;
+    padding-left: 2vh;
 }
 
 #phone-plus-icon {
-    position: relative;
-} */
+    float: right;
+    padding-right: 2vh;
+}
 
 #contact-search {
-    display: none;
+    display: block;
     position: absolute;
-    background: none;
     border: none;
-    background: rgb(226, 226, 226);
+    background-color: #212124;
     top: .7vh;
     width: 17vh;
     margin: 0 auto;
     left: 0;
     right: 0;
-    opacity: 0.0;
     height: 2.5vh;
-    border-radius: 1vh;
+    border-radius: 0.2vh;
+    border: 1px solid #1c1c1e;
     box-shadow: 0 0 .2vh 0 rgba(0, 0, 0, 0.281);
     font-family: 'Poppins', sans-serif;
+    color: #fff;
     outline: none;
     text-indent: 1vh;
     z-index: 100;
@@ -336,17 +338,16 @@
 .phone-contact-name {
     position: absolute;
     left: 6vh;
-    bottom: 0.9vh;
-    line-height: 5.2vh;
+    top: 0.7vh;
     font-family: 'Poppins', sans-serif;
     font-size: 1.3vh;
 }
 
 .phone-contact-number {
     position: absolute;
+    color: lightgray;
     left: 6vh;
-    top: 0.9vh;
-    line-height: 5.2vh;
+    top: 2.6vh;
     font-family: 'Poppins', sans-serif;
     font-size: 1.2vh;
 }
@@ -354,14 +355,14 @@
 .phone-contact-actions {
     position: absolute;
     right: 0;
-    top: .3vh;
+    top: 1vh;
     right: 2vh;
     font-size: 2.2vh;
     transition: .1s;
 }
 
 .phone-contact-actions:hover {
-    color: #e74c3c;
+    color: #1DA1F2;
 }
 
 .phone-contact-action-buttons {
@@ -387,7 +388,7 @@
 }
 
 .phone-contact-action-buttons > i:hover {
-    color: #dc143c;
+    color: #1DA1F2;
 }
 .phone-add-contact {
     display: none;
@@ -395,7 +396,7 @@
     height: 100%;
     width: 100%;
     top: -100%;
-    background: rgb(36, 36, 36);
+    background: #252528;
     z-index: 102;
 }
 
@@ -412,22 +413,22 @@
     color: white;
     top: 12vh;
     left: 6vh;
-    background: none;
-    border: none;
+    background-color: #212124;
     outline: none;
-    border-bottom: 2px solid rgba(0, 0, 0, 0.555);
+    border-radius: 0.2vh;
+    border: 1px solid #1c1c1e;
+    box-shadow: 0 0 .2vh 0 rgba(0, 0, 0, 0.281);
     font-family: 'Poppins', sans-serif;
     height: 3.5vh;
     width: 20vh;
     text-indent: .4vh;
-    border-radius: .5vh .5vh 0 0;
     transition: .1s;
     font-size: 1.5vh;
 }
 
 #phone-add-contact-name-icon {
     position: absolute;
-    top: 13.1vh;
+    top: 12.6vh;
     left: 2.1vh;
     font-size: 2.4vh;
     color: white;
@@ -446,15 +447,15 @@
     color: white;
     top: 19vh;
     left: 6vh;
-    background: none;
-    border: none;
+    background-color: #212124;
     outline: none;
-    border-bottom: 2px solid rgba(0, 0, 0, 0.555);
+    border-radius: 0.2vh;
+    border: 1px solid #1c1c1e;
+    box-shadow: 0 0 .2vh 0 rgba(0, 0, 0, 0.281);
     font-family: 'Poppins', sans-serif;
     height: 3.5vh;
     width: 20vh;
     text-indent: .4vh;
-    border-radius: .5vh .5vh 0 0;
     transition: .1s;
     font-size: 1.5vh;
 }
@@ -476,15 +477,15 @@
     color: white;
     top: 26vh;
     left: 6vh;
-    background: none;
-    border: none;
+    background-color: #212124;
     outline: none;
-    border-bottom: 2px solid rgba(0, 0, 0, 0.555);
+    border-radius: 0.2vh;
+    border: 1px solid #1c1c1e;
+    box-shadow: 0 0 .2vh 0 rgba(0, 0, 0, 0.281);
     font-family: 'Poppins', sans-serif;
     height: 3.5vh;
     width: 20vh;
     text-indent: .4vh;
-    border-radius: .5vh .5vh 0 0;
     transition: .1s;
     font-size: 1.5vh;
 }
@@ -503,7 +504,7 @@
 
 #phone-add-contact-number-icon {
     position: absolute;
-    top: 20.1vh;
+    top: 19.6vh;
     left: 2.1vh;
     font-size: 2.4vh;
     color: white;
@@ -511,7 +512,7 @@
 
 #phone-add-contact-iban-icon {
     position: absolute;
-    top: 27.1vh;
+    top: 26.6vh;
     left: 2.1vh;
     font-size: 2.4vh;
     color: white;
@@ -539,7 +540,7 @@
 }
 
 .phone-add-contact-button:hover {
-    border-top: 2px solid #eb4d4b;
+    border-top: 2px solid #1DA1F2;
 }
 
 /* EDIT CONTACT YEEY */
@@ -550,7 +551,7 @@
     height: 100%;
     width: 100%;
     top: -100%;
-    background: rgb(36, 36, 36);
+    background: #252528;
     z-index: 102;
 }
 
@@ -568,22 +569,22 @@
     color: white;
     top: 12vh;
     left: 6vh;
-    background: none;
-    border: none;
+    background-color: #212124;
     outline: none;
-    border-bottom: 2px solid rgba(0, 0, 0, 0.555);
+    border-radius: 0.2vh;
+    border: 1px solid #1c1c1e;
+    box-shadow: 0 0 .2vh 0 rgba(0, 0, 0, 0.281);
     font-family: 'Poppins', sans-serif;
     height: 3.5vh;
     width: 20vh;
     text-indent: .4vh;
-    border-radius: .5vh .5vh 0 0;
     transition: .1s;
     font-size: 1.5vh;
 }
 
 #phone-edit-contact-name-icon {
     position: absolute;
-    top: 13.1vh;
+    top: 12.6vh;
     left: 2.1vh;
     font-size: 2.4vh;
     color: white;
@@ -599,18 +600,18 @@
 
 .phone-edit-contact-number {
     position: absolute;
-    top: 19vh;
     color: white;
+    top: 19vh;
     left: 6vh;
-    background: none;
-    border: none;
+    background-color: #212124;
     outline: none;
-    border-bottom: 2px solid rgba(0, 0, 0, 0.555);
+    border-radius: 0.2vh;
+    border: 1px solid #1c1c1e;
+    box-shadow: 0 0 .2vh 0 rgba(0, 0, 0, 0.281);
     font-family: 'Poppins', sans-serif;
     height: 3.5vh;
     width: 20vh;
     text-indent: .4vh;
-    border-radius: .5vh .5vh 0 0;
     transition: .1s;
     font-size: 1.5vh;
 }
@@ -632,15 +633,15 @@
     color: white;
     top: 26vh;
     left: 6vh;
-    background: none;
-    border: none;
+    background-color: #212124;
     outline: none;
-    border-bottom: 2px solid rgba(0, 0, 0, 0.555);
+    border-radius: 0.2vh;
+    border: 1px solid #1c1c1e;
+    box-shadow: 0 0 .2vh 0 rgba(0, 0, 0, 0.281);
     font-family: 'Poppins', sans-serif;
     height: 3.5vh;
     width: 20vh;
     text-indent: .4vh;
-    border-radius: .5vh .5vh 0 0;
     transition: .1s;
     font-size: 1.5vh;
 }
@@ -659,7 +660,7 @@
 
 #phone-edit-contact-number-icon {
     position: absolute;
-    top: 20.1vh;
+    top: 19.6vh;
     left: 2.1vh;
     font-size: 2.4vh;
     color: white;
@@ -667,7 +668,7 @@
 
 #phone-edit-contact-iban-icon {
     position: absolute;
-    top: 27.1vh;
+    top: 26.6vh;
     left: 2.1vh;
     font-size: 2.4vh;
     color: white;
@@ -695,7 +696,7 @@
 }
 
 .phone-edit-contact-button:hover {
-    border-top: 2px solid #eb4d4b;
+    border-top: 2px solid #1DA1F2;
 }
 
 /* Phone Call App */
@@ -961,7 +962,7 @@
     height: 100%;
     width: 100%;
     top: 0;
-    background: rgb(36, 36, 36);
+    background: #252528;
 }
 
 .phone-suggestedcontacts-header {
@@ -1007,7 +1008,7 @@
 }
 
 .suggested-contact:hover {
-    background-color: #dc143c;
+    background-color: #212124;
 }
 
 .suggested-contact > i {

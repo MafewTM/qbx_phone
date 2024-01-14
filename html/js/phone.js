@@ -1,4 +1,3 @@
-var ContactSearchActive = false;
 var CurrentFooterTab = "contacts";
 var CallData = {};
 var ClearNumberTimer = null;
@@ -28,33 +27,6 @@ $(document).on('click', '.phone-app-footer-button', function(e){
 
         CurrentFooterTab = PressedFooterTab;
     }
-});
-
-$(document).on("click", "#phone-search-icon", function(e){
-    e.preventDefault();
-
-    if (!ContactSearchActive) {
-        $("#phone-plus-icon").animate({
-            opacity: "0.0",
-            "display": "none"
-        }, 150, function(){
-            $("#contact-search").css({"display":"block"}).animate({
-                opacity: "1.0",
-            }, 150);
-        });
-    } else {
-        $("#contact-search").animate({
-            opacity: "0.0"
-        }, 150, function(){
-            $("#contact-search").css({"display":"none"});
-            $("#phone-plus-icon").animate({
-                opacity: "1.0",
-                display: "block",
-            }, 150);
-        });
-    }
-
-    ContactSearchActive = !ContactSearchActive;
 });
 
 QB.Phone.Functions.SetupRecentCalls = function(recentcalls) {
@@ -208,9 +180,9 @@ QB.Phone.Functions.LoadContacts = function(myContacts) {
                 ALLOWED_ATTR: []
             });
             if (contact.name == '') contact.name = 'Hmm, I shouldn\'t be able to do this...'
-            var ContactElement = '<div class="phone-contact" data-contactid="'+i+'"><div class="phone-contact-firstletter" style="background-color: #e74c3c;">'+((contact.name).charAt(0)).toUpperCase()+'</div><div class="phone-contact-name">'+contact.name+'</div><div class="phone-contact-number">'+contact.number+'</div><div class="phone-contact-actions"><i class="fas fa-angle-down"></i></div><div class="phone-contact-action-buttons"> <i class="fas fa-phone-volume" id="phone-start-call"></i> <i class="fas fa-comment" id="new-chat-phone" style="font-size: 2.5vh;"></i> <i class="fas fa-user-edit" id="edit-contact"></i> </div></div>'
+            var ContactElement = '<div class="phone-contact" data-contactid="'+i+'"><div class="phone-contact-firstletter" style="background-color: #e74c3c;">'+((contact.name).charAt(0)).toUpperCase()+'</div><div class="phone-contact-name">'+contact.name+'</div><div class="phone-contact-number">'+contact.number+'</div><div class="phone-contact-actions"><i class="fas fa-angle-down"></i></div><div class="phone-contact-action-buttons"> <i class="fas fa-phone" id="phone-start-call"></i> <i class="fas fa-comment" id="new-chat-phone" style="font-size: 2.5vh;"></i> <i class="fas fa-user-edit" id="edit-contact"></i> </div></div>'
             if (contact.status) {
-                ContactElement = '<div class="phone-contact" data-contactid="'+i+'"><div class="phone-contact-firstletter" style="background-color: #2ecc71;">'+((contact.name).charAt(0)).toUpperCase()+'</div><div class="phone-contact-name">'+contact.name+'</div><div class="phone-contact-number">'+contact.number+'</div><div class="phone-contact-actions"><i class="fas fa-angle-down"></i></div><div class="phone-contact-action-buttons"> <i class="fas fa-phone-volume" id="phone-start-call"></i> <i class="fas fa-comment" id="new-chat-phone" style="font-size: 2.5vh;"></i> <i class="fas fa-user-edit" id="edit-contact"></i> </div></div>'
+                ContactElement = '<div class="phone-contact" data-contactid="'+i+'"><div class="phone-contact-firstletter" style="background-color: #2ecc71;">'+((contact.name).charAt(0)).toUpperCase()+'</div><div class="phone-contact-name">'+contact.name+'</div><div class="phone-contact-number">'+contact.number+'</div><div class="phone-contact-actions"><i class="fas fa-angle-down"></i></div><div class="phone-contact-action-buttons"> <i class="fas fa-phone" id="phone-start-call"></i> <i class="fas fa-comment" id="new-chat-phone" style="font-size: 2.5vh;"></i> <i class="fas fa-user-edit" id="edit-contact"></i> </div></div>'
             }
             TotalContacts = TotalContacts + 1
             $(ContactsObject).append(ContactElement);
@@ -259,7 +231,7 @@ $(document).on('click', '#new-chat-phone', function(e){
             });
         }, 400)
     } else {
-        QB.Phone.Notifications.Add("fa fa-phone-alt", "Phone", "You can't messages yourself..", "default", 3500);
+        QB.Phone.Notifications.Add("fa fa-phone", "Phone", "You can't messages yourself..", "default", 3500);
     }
 });
 
@@ -277,7 +249,7 @@ $(document).on('click', '#edit-contact', function(e){
     if (CurrentEditContactData.name == '') CurrentEditContactData.name = 'Hmm, I shouldn\'t be able to do this...'
     CurrentEditContactData.number = ContactData.number
 
-    $(".phone-edit-contact-header").text(ContactData.name+" Edit")
+    $(".phone-edit-contact-header").text("Edit Contact")
     $(".phone-edit-contact-name").val(ContactData.name);
     $(".phone-edit-contact-number").val(ContactData.number);
     if (ContactData.iban != null && ContactData.iban != undefined) {
@@ -413,6 +385,12 @@ $(document).on('click', '.phone-contact-actions', function(e){
             $(FocussedContact).find('.phone-contact-action-buttons').fadeIn(100);
         });
     }
+});
+
+$(document).on('click', '#phone-suggested-icon', function(e){
+    e.preventDefault();
+
+    QB.Phone.Animations.TopSlideDown(".phone-suggestedcontacts", 200, 0);
 });
 
 
