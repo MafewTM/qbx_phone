@@ -37,7 +37,13 @@ local function generateTweetId()
 end
 
 local function isNumberInContacts(num)
-    return PhoneData.Contacts[num] or num
+    for _, v in pairs(PhoneData.Contacts) do
+        if num == v.number then
+            return v.name
+        end
+    end
+
+    return 'Unknown'
 end
 
 local function calculateTimeToDisplay()
