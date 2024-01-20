@@ -34,14 +34,12 @@ function DeletePhone()
 end
 
 function DoPhoneAnimation(anim)
-    local animationLib = 'cellphone@'
-    local animationStatus = anim
-    if IsPedInAnyVehicle(cache.ped, false) then
-        animationLib = 'anim@cellphone@in_car@ps'
-    end
+    local animationLib = IsPedInAnyVehicle(cache.ped, false) and 'anim@cellphone@in_car@ps' or 'cellphone@'
     lib.requestAnimDict(animationLib, 5000)
-    TaskPlayAnim(cache.ped, animationLib, animationStatus, 3.0, 3.0, -1, 50, 0, false, false, false)
+    TaskPlayAnim(cache.ped, animationLib, anim, 3.0, 3.0, -1, 50, 0, false, false, false)
+
     PhoneData.AnimationData.lib = animationLib
-    PhoneData.AnimationData.anim = animationStatus
+    PhoneData.AnimationData.anim = anim
+
     checkAnimLoop()
 end
