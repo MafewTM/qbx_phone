@@ -1,6 +1,5 @@
 local config = require 'config.server'
 local garageConfig = require '@qbx_garages.config.shared'
-local QBPhone = {}
 local AppAlerts = {}
 local MentionedTweets = {}
 local Hashtags = {}
@@ -28,14 +27,12 @@ local function escape_sqli(source)
     return source:gsub("['\"]", replacements)
 end
 
-function QBPhone.AddMentionedTweet(citizenid, TweetData)
-    if MentionedTweets[citizenid] == nil then
-        MentionedTweets[citizenid] = {}
-    end
-    MentionedTweets[citizenid][#MentionedTweets[citizenid]+1] = TweetData
+local function addMentionedTweet(citizenid, TweetData)
+    MentionedTweets[citizenid] = MentionedTweets[citizenid] or {}
+    MentionedTweets[citizenid][#MentionedTweets[citizenid] + 1] = TweetData
 end
 
-function QBPhone.SetPhoneAlerts(citizenid, app, alerts)
+local function setPhoneAlerts(citizenid, app, alerts)
     if citizenid == nil or app == nil then return end
 
     AppAlerts[citizenid] = AppAlerts[citizenid] or {}
@@ -43,48 +40,48 @@ function QBPhone.SetPhoneAlerts(citizenid, app, alerts)
 end
 
 local function splitStringToArray(string)
-    local retval = {}
-    for i in string.gmatch(string, '%S+') do
-        retval[#retval + 1] = i
+    local result = {}
+    for substring in string.gmatch(string, '%S+') do
+        result[#result + 1] = substring
     end
-    return retval
+    return result
 end
 
 local function generateOwnerName()
     local names = {
-        [1] = { name = 'Bailey Sykes',          citizenid = 'DSH091G93' },
-        [2] = { name = 'Aroush Goodwin',        citizenid = 'AVH09M193' },
-        [3] = { name = 'Tom Warren',            citizenid = 'DVH091T93' },
-        [4] = { name = 'Abdallah Friedman',     citizenid = 'GZP091G93' },
-        [5] = { name = 'Lavinia Powell',        citizenid = 'DRH09Z193' },
-        [6] = { name = 'Andrew Delarosa',       citizenid = 'KGV091J93' },
-        [7] = { name = 'Skye Cardenas',         citizenid = 'ODF09S193' },
-        [8] = { name = 'Amelia-Mae Walter',     citizenid = 'KSD0919H3' },
-        [9] = { name = 'Elisha Cote',           citizenid = 'NDX091D93' },
-        [10] = { name = 'Janice Rhodes',        citizenid = 'ZAL0919X3' },
-        [11] = { name = 'Justin Harris',        citizenid = 'ZAK09D193' },
-        [12] = { name = 'Montel Graves',        citizenid = 'POL09F193' },
-        [13] = { name = 'Benjamin Zavala',      citizenid = 'TEW0J9193' },
-        [14] = { name = 'Mia Willis',           citizenid = 'YOO09H193' },
-        [15] = { name = 'Jacques Schmitt',      citizenid = 'QBC091H93' },
-        [16] = { name = 'Mert Simmonds',        citizenid = 'YDN091H93' },
-        [17] = { name = 'Rickie Browne',        citizenid = 'PJD09D193' },
-        [18] = { name = 'Deacon Stanley',       citizenid = 'RND091D93' },
-        [19] = { name = 'Daisy Fraser',         citizenid = 'QWE091A93' },
-        [20] = { name = 'Kitty Walters',        citizenid = 'KJH0919M3' },
-        [21] = { name = 'Jareth Fernandez',     citizenid = 'ZXC09D193' },
-        [22] = { name = 'Meredith Calhoun',     citizenid = 'XYZ0919C3' },
-        [23] = { name = 'Teagan Mckay',         citizenid = 'ZYX0919F3' },
-        [24] = { name = 'Kurt Bain',            citizenid = 'IOP091O93' },
-        [25] = { name = 'Burt Kain',            citizenid = 'PIO091R93' },
-        [26] = { name = 'Joanna Huff',          citizenid = 'LEK091X93' },
-        [27] = { name = 'Carrie-Ann Pineda',    citizenid = 'ALG091Y93' },
-        [28] = { name = 'Gracie-Mai Mcghee',    citizenid = 'YUR09E193' },
-        [29] = { name = 'Robyn Boone',          citizenid = 'SOM091W93' },
-        [30] = { name = 'Aliya William',        citizenid = 'KAS009193' },
-        [31] = { name = 'Rohit West',           citizenid = 'SOK091093' },
-        [32] = { name = 'Skylar Archer',        citizenid = 'LOK091093' },
-        [33] = { name = 'Jake Kumar',           citizenid = 'AKA420609' },
+        {name = 'Bailey Sykes', citizenId = 'DSH091G93'},
+        {name = 'Aroush Goodwin', citizenId = 'AVH09M193'},
+        {name = 'Tom Warren', citizenId = 'DVH091T93'},
+        {name = 'Abdallah Friedman', citizenId = 'GZP091G93'},
+        {name = 'Lavinia Powell', citizenId = 'DRH09Z193'},
+        {name = 'Andrew Delarosa', citizenId = 'KGV091J93'},
+        {name = 'Skye Cardenas', citizenId = 'ODF09S193'},
+        {name = 'Amelia-Mae Walter', citizenId = 'KSD0919H3'},
+        {name = 'Elisha Cote', citizenId = 'NDX091D93'},
+        {name = 'Janice Rhodes', citizenId = 'ZAL0919X3'},
+        {name = 'Justin Harris', citizenId = 'ZAK09D193'},
+        {name = 'Montel Graves', citizenId = 'POL09F193'},
+        {name = 'Benjamin Zavala', citizenId = 'TEW0J9193'},
+        {name = 'Mia Willis', citizenId = 'YOO09H193'},
+        {name = 'Jacques Schmitt', citizenId = 'QBC091H93'},
+        {name = 'Mert Simmonds', citizenId = 'YDN091H93'},
+        {name = 'Rickie Browne', citizenId = 'PJD09D193'},
+        {name = 'Deacon Stanley', citizenId = 'RND091D93'},
+        {name = 'Daisy Fraser', citizenId = 'QWE091A93'},
+        {name = 'Kitty Walters', citizenId = 'KJH0919M3'},
+        {name = 'Jareth Fernandez', citizenId = 'ZXC09D193'},
+        {name = 'Meredith Calhoun', citizenId = 'XYZ0919C3'},
+        {name = 'Teagan Mckay', citizenId = 'ZYX0919F3'},
+        {name = 'Kurt Bain', citizenId = 'IOP091O93'},
+        {name = 'Burt Kain', citizenId = 'PIO091R93'},
+        {name = 'Joanna Huff', citizenId = 'LEK091X93'},
+        {name = 'Carrie-Ann Pineda', citizenId = 'ALG091Y93'},
+        {name = 'Gracie-Mai Mcghee', citizenId = 'YUR09E193'},
+        {name = 'Robyn Boone', citizenId = 'SOM091W93'},
+        {name = 'Aliya William', citizenId = 'KAS009193'},
+        {name = 'Rohit West', citizenId = 'SOK091093'},
+        {name = 'Skylar Archer', citizenId = 'LOK091093'},
+        {name = 'Jake Kumar', citizenId = 'AKA420609'},
     }
 
     return names[math.random(1, #names)]
@@ -217,32 +214,29 @@ lib.callback.register('qb-phone:server:GetPhoneData', function(source)
 end)
 
 lib.callback.register('qb-phone:server:PayInvoice', function(source, society, amount, invoiceId, sendercitizenid)
-    local Invoices = {}
     local player = exports.qbx_core:GetPlayer(source)
     local sender = exports.qbx_core:GetPlayerByCitizenId(sendercitizenid)
+    local invoices = {}
     local invoiceMailData = {}
-    if sender and config.billingCommissions[society] then
-        local commission = math.round(amount * config.billingCommissions[society])
-        sender.Functions.AddMoney('bank', commission)
+    local billingCommission = config.billingCommissions[society]
+    local commission = qbx.math.round(amount * billingCommission)
+    if billingCommission then
         invoiceMailData = {
             sender = 'Billing Department',
-            subject = 'Commission Received',
-            message = string.format('You received a commission check of $%s when %s %s paid a bill of $%s.', commission, player.PlayerData.charinfo.firstname, player.PlayerData.charinfo.lastname, amount)
+            subject = billingCommission and 'Commission Received' or 'Bill Paid',
+            message = billingCommission and ('You received a commission check of $%s when %s %s paid a bill of $%s.'):format(commission, player.PlayerData.charinfo.firstname, player.PlayerData.charinfo.lastname, amount) or ('%s %s paid a bill of $%s'):format(player.PlayerData.charinfo.firstname, player.PlayerData.charinfo.lastname, amount)
         }
-    elseif not sender and config.billingCommissions[society] then
-        invoiceMailData = {
-            sender = 'Billing Department',
-            subject = 'Bill Paid',
-            message = string.format('%s %s paid a bill of $%s', player.PlayerData.charinfo.firstname, player.PlayerData.charinfo.lastname, amount)
-        }
+        if sender then
+            sender.Functions.AddMoney('bank', commission)
+        end
     end
     player.Functions.RemoveMoney('bank', amount, 'paid-invoice')
     TriggerEvent('qb-phone:server:sendNewMailToOffline', sendercitizenid, invoiceMailData)
 	exports.qbx_management:AddMoney(society, amount)
     MySQL.query('DELETE FROM phone_invoices WHERE id = ?', {invoiceId})
-    local invoices = MySQL.query.await('SELECT * FROM phone_invoices WHERE citizenid = ?', {player.PlayerData.citizenid})
-    Invoices = invoices[1] or Invoices
-    return true, Invoices
+    local playerInvoices = MySQL.query.await('SELECT * FROM phone_invoices WHERE citizenid = ?', {player.PlayerData.citizenid})
+    invoices = playerInvoices[1] or invoices
+    return true, invoices
 end)
 
 lib.callback.register('qb-phone:server:DeclineInvoice', function(source, invoiceId)
@@ -369,13 +363,13 @@ lib.callback.register('qb-phone:server:GetVehicleSearchResults', function(search
                 plate = search,
                 status = true,
                 owner = ownerInfo.name,
-                citizenid = ownerInfo.citizenid
+                citizenid = ownerInfo.citizenId
             }
             searchData[#searchData + 1] = {
                 plate = search,
                 status = true,
                 owner = ownerInfo.name,
-                citizenid = ownerInfo.citizenid,
+                citizenid = ownerInfo.citizenId,
                 label = 'Brand unknown..'
             }
         end
@@ -409,13 +403,13 @@ lib.callback.register('qb-phone:server:GetPicture', function(source, plate)
             plate = plate,
             status = true,
             owner = ownerInfo.name,
-            citizenid = ownerInfo.citizenid
+            citizenid = ownerInfo.citizenId
         }
         vehicleData = {
             plate = plate,
             status = true,
             owner = ownerInfo.name,
-            citizenid = ownerInfo.citizenid
+            citizenid = ownerInfo.citizenId
         }
     end
     return vehicleData
@@ -634,8 +628,8 @@ RegisterNetEvent('qb-phone:server:MentionedPlayer', function(firstName, lastName
         local player = exports.qbx_core:GetPlayer(v)
         if player then
             if (player.PlayerData.charinfo.firstname == firstName and player.PlayerData.charinfo.lastname == lastName) then
-                QBPhone.SetPhoneAlerts(player.PlayerData.citizenid, 'twitter')
-                QBPhone.AddMentionedTweet(player.PlayerData.citizenid, tweetMessage)
+                setPhoneAlerts(player.PlayerData.citizenid, 'twitter')
+                addMentionedTweet(player.PlayerData.citizenid, tweetMessage)
                 TriggerClientEvent('qb-phone:client:GetMentioned', player.PlayerData.source, tweetMessage, AppAlerts[player.PlayerData.citizenid].twitter)
             else
                 local query1 = '%' .. firstName .. '%'
@@ -643,8 +637,8 @@ RegisterNetEvent('qb-phone:server:MentionedPlayer', function(firstName, lastName
                 local result = MySQL.query.await('SELECT * FROM players WHERE charinfo LIKE ? AND charinfo LIKE ?', {query1, query2})
                 if result[1] then
                     local MentionedTarget = result[1].citizenid
-                    QBPhone.SetPhoneAlerts(MentionedTarget, 'twitter')
-                    QBPhone.AddMentionedTweet(MentionedTarget, tweetMessage)
+                    setPhoneAlerts(MentionedTarget, 'twitter')
+                    addMentionedTweet(MentionedTarget, tweetMessage)
                 end
             end
         end
@@ -687,7 +681,7 @@ end)
 RegisterNetEvent('qb-phone:server:SetPhoneAlerts', function(app, alerts)
     local src = source
     local citizenId = exports.qbx_core:GetPlayer(src).citizenid
-    QBPhone.SetPhoneAlerts(citizenId, app, alerts)
+    setPhoneAlerts(citizenId, app, alerts)
 end)
 
 RegisterNetEvent('qb-phone:server:DeleteTweet', function(tweetId)
@@ -743,7 +737,7 @@ RegisterNetEvent('qb-phone:server:TransferMoney', function(iban, amount)
             end
         else
             local moneyInfo = json.decode(result[1].money)
-            moneyInfo.bank = math.round((moneyInfo.bank + amount))
+            moneyInfo.bank = qbx.math.round((moneyInfo.bank + amount))
             MySQL.update('UPDATE players SET money = ? WHERE citizenid = ?', {json.encode(moneyInfo), result[1].citizenid})
             sender.Functions.RemoveMoney('bank', amount, 'phone-transfered')
         end
