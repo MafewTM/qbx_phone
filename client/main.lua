@@ -94,11 +94,11 @@ local function reorganizeChats(key)
 end
 
 local function findVehFromPlateAndLocate(plate)
-    local gameVehicles = GetVehicles()
+    local gameVehicles = GetGamePool('CVehicle')
     for i = 1, #gameVehicles do
         local vehicle = gameVehicles[i]
         if DoesEntityExist(vehicle) then
-            if GetPlate(vehicle) == plate then
+            if qbx.getVehiclePlate(vehicle) == plate then
                 local vehCoords = GetEntityCoords(vehicle)
                 SetNewWaypoint(vehCoords.x, vehCoords.y)
                 return true
@@ -891,9 +891,9 @@ RegisterNUICallback('FetchVehicleResults', function(data, cb)
 end)
 
 RegisterNUICallback('FetchVehicleScan', function(_, cb)
-    local vehicle = GetClosestVehicle()
-    local plate = GetPlate(vehicle)
-    local vehName = GetDisplayNameFromVehicleModel(GetEntityModel(vehicle)):lower()
+    local vehicle, _ = lib.getClosestVehicle(GetEntityCoords(cache.ped), 20)
+    local plate = qbx.getVehiclePlate(vehicle)
+    local vehName = qbx.getVehicleDisplayName(vehicle):lower()
     local result = lib.callback.await('qb-phone:server:ScanPlate', false, plate)
     local flagged = lib.callback.await('police:IsPlateFlagged', false, plate)
 
@@ -1957,7 +1957,7 @@ RegisterNetEvent('qb-phone:client:answerCall', function()
 end)
 
 RegisterNetEvent('qb-phone:client:addPoliceAlert', function(alertData)
-    if not QBX.PlayerData.job.type == 'leo' and not QBX.PlayerData.job.onduty then return end
+    if not (QBX.PlayerData.job.type == 'leo' and not QBX.PlayerData.job.onduty) then return end
     SendNUIMessage({
         action = 'AddPoliceAlert',
         alert = alertData,
@@ -1965,7 +1965,7 @@ RegisterNetEvent('qb-phone:client:addPoliceAlert', function(alertData)
 end)
 
 RegisterNetEvent('qb-phone:client:GiveContactDetails', function()
-    local player, distance = GetClosestPlayer()
+    local player, _, distance = lib.getClosestPlayer(GetEntityCoords(cache.ped))
     if player ~= -1 and distance < 2.5 then
         local PlayerId = GetPlayerServerId(player)
         TriggerServerEvent('qb-phone:server:GiveContactDetails', PlayerId)
